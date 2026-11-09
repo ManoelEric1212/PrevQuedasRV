@@ -1,0 +1,32 @@
+{
+ "version": 1,
+ "ambientes": [
+  {
+   "id": "banheiro-da-dona-maria-foto-360-68edf3",
+   "name": "Banheiro da Dona Maria (foto 360°)",
+   "type": "photo",
+   "published": true,
+   "thumb": "ambientes/banheiro-da-dona-maria-foto-360-68edf3/arquivos/miniatura.jpg",
+   "updatedAt": "2026-11-08T21:26:50.457Z",
+   "order": 0
+  },
+  {
+   "id": "quarto-com-riscos-copia-a5411c",
+   "name": "Quarto com riscos (cópia)",
+   "type": "model",
+   "published": false,
+   "thumb": "ambientes/quarto-com-riscos-copia-a5411c/arquivos/miniatura.jpg",
+   "updatedAt": "2026-11-08T21:19:42.933Z",
+   "order": 0
+  },
+  {
+   "id": "quarto-da-dona-maria-1a0f78",
+   "name": "Quarto da Dona Maria",
+   "type": "model",
+   "published": true,
+   "thumb": "ambientes/quarto-da-dona-maria-1a0f78/arquivos/miniatura.jpg",
+   "updatedAt": "2026-11-08T21:26:12.124Z",
+   "order": 0
+  }
+ ]
+}

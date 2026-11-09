@@ -1,0 +1,86 @@
+{
+ "type": "photo",
+ "name": "Banheiro da Dona Maria (foto 360°)",
+ "photo": "ambientes/banheiro-da-dona-maria-foto-360-68edf3/arquivos/foto-banheiro.jpg",
+ "background": "#000000",
+ "brightness": 1,
+ "camera": {
+  "position": [
+   0,
+   1.6,
+   0
+  ],
+  "yaw": -49.99718354756992
+ },
+ "intro": {
+  "text": "Foto do banheiro. Encontre os 4 riscos marcados.",
+  "audio": null
+ },
+ "hotspots": [
+  {
+   "id": "tapete",
+   "name": "Tapete",
+   "label": "Tapete",
+   "yaw": -119.8,
+   "pitch": -63.9,
+   "size": 1.6,
+   "interactive": {
+    "kind": "risco",
+    "title": "Tapete sem antiderrapante",
+    "text": "O tapete pode escorregar no piso molhado.",
+    "audio": "assets/audio/riscos-ban-tapete.mp3",
+    "action": null,
+    "hover": null
+   }
+  },
+  {
+   "id": "piso",
+   "name": "Piso molhado",
+   "label": "Piso molhado",
+   "yaw": -108.6,
+   "pitch": -42.9,
+   "size": 1.6,
+   "interactive": {
+    "kind": "risco",
+    "title": "Piso molhado",
+    "text": "Seque o chão após o banho.",
+    "audio": "assets/audio/riscos-ban-piso-molhado.mp3",
+    "action": null
+   }
+  },
+  {
+   "id": "box",
+   "name": "Box",
+   "label": "Box",
+   "yaw": -105.8,
+   "pitch": 7.2,
+   "size": 1.6,
+   "interactive": {
+    "kind": "risco",
+    "title": "Box sem barra de apoio",
+    "text": "Instale barras de apoio dentro do box.",
+    "audio": "assets/audio/riscos-ban-box.mp3",
+    "action": null
+   }
+  },
+  {
+   "id": "lixeira",
+   "name": "Lixeira",
+   "label": "Lixeira",
+   "yaw": 125.3,
+   "pitch": -47.1,
+   "size": 1.6,
+   "interactive": {
+    "kind": "risco",
+    "title": "Lixeira no caminho",
+    "text": "Deixe a lixeira encostada na parede.",
+    "audio": "assets/audio/riscos-ban-lixeira.mp3",
+    "action": null
+   }
+  }
+ ],
+ "published": true,
+ "id": "banheiro-da-dona-maria-foto-360-68edf3",
+ "updatedAt": "2026-11-08T21:26:50.457Z",
+ "thumb": "ambientes/banheiro-da-dona-maria-foto-360-68edf3/arquivos/miniatura.jpg"
+}

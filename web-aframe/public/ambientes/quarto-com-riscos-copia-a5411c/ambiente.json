@@ -1,0 +1,1509 @@
+{
+ "type": "model",
+ "name": "Quarto com riscos (cópia)",
+ "source": "3-Quarto-risco",
+ "lighting": "unity",
+ "ambient": {
+  "sky": [
+   0.212,
+   0.227,
+   0.259
+  ],
+  "equator": [
+   0.114,
+   0.125,
+   0.133
+  ],
+  "ground": [
+   0.047,
+   0.043,
+   0.035
+  ]
+ },
+ "background": "#9fb6bf",
+ "brightness": 1.45,
+ "camera": {
+  "position": [
+   7.19,
+   1.6,
+   -12.45
+  ],
+  "rotation": [
+   0,
+   0.9885,
+   0,
+   -0.1515
+  ]
+ },
+ "intro": {
+  "text": "",
+  "audio": "assets/audio/riscos-pergunta-risco.mp3"
+ },
+ "nodes": [
+  {
+   "name": "quarto-risco",
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "children": [
+    {
+     "name": "parede02",
+     "position": [
+      6.665,
+      1.71,
+      -15.475
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "parede02"
+     },
+     "id": "h7xcmtg"
+    },
+    {
+     "name": "luminaria",
+     "position": [
+      6.6907,
+      1.1869,
+      -15.1835
+     ],
+     "rotation": [
+      -0.4998,
+      -0.5002,
+      -0.5002,
+      0.4998
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "luminaria"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "luminaria"
+     },
+     "id": "ayqffpi"
+    },
+    {
+     "name": "porta-entrada-02",
+     "position": [
+      8.268,
+      1.2504,
+      -11.6
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "porta-entrada-02"
+     },
+     "id": "3o77n8l"
+    },
+    {
+     "name": "puxador-porta-banheiro",
+     "position": [
+      6.535,
+      1.16,
+      -11.1
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "metalico"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "puxador-porta-banheiro"
+     },
+     "id": "v944t1j"
+    },
+    {
+     "name": "aparelho",
+     "position": [
+      8.0448,
+      0.9321,
+      -13.4801
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "eletronicos",
+      "eletronicos",
+      "eletronicos",
+      "eletronicos",
+      "eletronicos",
+      "eletronicos",
+      "eletronicos",
+      "eletronicos"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "aparelho"
+     },
+     "id": "qox66o1"
+    },
+    {
+     "name": "porta-entrada-01",
+     "position": [
+      8.2828,
+      1.2359,
+      -11.6025
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "porta-entrada-01"
+     },
+     "id": "wegytjf"
+    },
+    {
+     "name": "cama",
+     "position": [
+      6.0139,
+      0.673,
+      -13.7093
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "tecido"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "cama"
+     },
+     "id": "kppt4il"
+    },
+    {
+     "name": "teto",
+     "position": [
+      6.665,
+      2.985,
+      -13.225
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "teto"
+     },
+     "id": "w70rth6"
+    },
+    {
+     "name": "porta-banheiro-02",
+     "position": [
+      6.89,
+      1.2525,
+      -10.975
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "porta-banheiro-02"
+     },
+     "id": "w5bwnwx"
+    },
+    {
+     "name": "guarda-roupa",
+     "position": [
+      5.7744,
+      1.2352,
+      -11.5393
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco",
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "guarda-roupa"
+     },
+     "id": "a3gqnsj"
+    },
+    {
+     "name": "tv",
+     "position": [
+      8.2011,
+      1.2331,
+      -13.307
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "eletronicos",
+      "eletronicos",
+      "eletronicos",
+      "eletronicos",
+      "eletronicos"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "tv"
+     },
+     "id": "3048l3c"
+    },
+    {
+     "name": "suporte-cama",
+     "position": [
+      6.1202,
+      0.4984,
+      -13.6985
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-cinza"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "suporte-cama"
+     },
+     "id": "o7bac4x"
+    },
+    {
+     "name": "vidro-01",
+     "position": [
+      6.18,
+      1.86,
+      -15.5
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "vidro"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "vidro-01"
+     },
+     "id": "bjlanju"
+    },
+    {
+     "name": "rack-madeira",
+     "position": [
+      8.0441,
+      0.8164,
+      -13.2037
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "madeira-escura"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "rack-madeira"
+     },
+     "id": "3iv5rp8"
+    },
+    {
+     "name": "parede03",
+     "position": [
+      8.315,
+      1.81,
+      -12.375
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "parede03"
+     },
+     "id": "3plklwe"
+    },
+    {
+     "name": "janela-moldura-madeira-02",
+     "position": [
+      7.15,
+      1.86,
+      -15.475
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "madeira-escura"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "janela-moldura-madeira-02"
+     },
+     "id": "ltoaymi"
+    },
+    {
+     "name": "cabeceira-madeira",
+     "position": [
+      5.105,
+      0.81,
+      -13.525
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "madeira-escura"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "cabeceira-madeira"
+     },
+     "id": "50t6cc6"
+    },
+    {
+     "name": "parede04",
+     "position": [
+      6.7775,
+      1.81,
+      -10.975
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "parede04"
+     },
+     "id": "4m3pqkq"
+    },
+    {
+     "name": "janela-moldura-madeira-01",
+     "position": [
+      6.18,
+      1.86,
+      -15.505
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "madeira-escura"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "janela-moldura-madeira-01"
+     },
+     "id": "r4xq5ri"
+    },
+    {
+     "name": "vidro-02",
+     "position": [
+      7.15,
+      1.86,
+      -15.47
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "vidro"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "vidro-02"
+     },
+     "id": "f8glyoj"
+    },
+    {
+     "name": "rack-puxador",
+     "position": [
+      7.8782,
+      0.7162,
+      -13.755
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-cinza"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "rack-puxador"
+     },
+     "id": "tr2077l"
+    },
+    {
+     "name": "almofada",
+     "position": [
+      5.351,
+      0.9251,
+      -13.6907
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "luminaria"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "almofada"
+     },
+     "id": "unohfof"
+    },
+    {
+     "name": "janela-madeira",
+     "position": [
+      6.665,
+      1.86,
+      -15.475
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "madeira-escura"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "janela-madeira"
+     },
+     "id": "np1ie5q"
+    },
+    {
+     "name": "puxadores-criado-mudo",
+     "position": [
+      6.6891,
+      0.5949,
+      -14.988
+     ],
+     "rotation": [
+      -0.4994,
+      -0.5006,
+      -0.5006,
+      0.4994
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "aco",
+      "aco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "puxadores-criado-mudo"
+     },
+     "id": "ljewtbs"
+    },
+    {
+     "name": "porta-banheiro-01",
+     "position": [
+      6.89,
+      1.26,
+      -11.065
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "porta-banheiro-01"
+     },
+     "id": "hv5lom4"
+    },
+    {
+     "name": "rack-branca",
+     "position": [
+      7.8793,
+      0.5375,
+      -13.205
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "rack-branca"
+     },
+     "id": "ztgzg05"
+    },
+    {
+     "name": "cadeira",
+     "position": [
+      5.8681,
+      0.5627,
+      -12.4738
+     ],
+     "rotation": [
+      -0.5,
+      0.5,
+      0.5,
+      0.5
+     ],
+     "scale": [
+      111,
+      111,
+      111
+     ],
+     "materials": [
+      "banco-laranja"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "cadeira"
+     },
+     "children": [
+      {
+       "name": "cadeira-braço",
+       "position": [
+        0,
+        0.0033,
+        0.0028
+       ],
+       "rotation": [
+        0,
+        0,
+        -0.7071,
+        0.7071
+       ],
+       "scale": [
+        0.9009,
+        0.9009,
+        0.9009
+       ],
+       "materials": [
+        "braco-cadeira"
+       ],
+       "mesh": {
+        "model": "quarto-risco",
+        "name": "cadeira-braço"
+       },
+       "id": "x2n9l2x"
+      },
+      {
+       "name": "cadeira-estrutura",
+       "position": [
+        0,
+        0.0035,
+        0.0017
+       ],
+       "rotation": [
+        0,
+        0,
+        -0.7071,
+        0.7071
+       ],
+       "scale": [
+        0.9009,
+        0.9009,
+        0.9009
+       ],
+       "materials": [
+        "braco-cadeira",
+        "braco-cadeira"
+       ],
+       "mesh": {
+        "model": "quarto-risco",
+        "name": "cadeira-estrutura"
+       },
+       "id": "hxz9sk2"
+      }
+     ],
+     "id": "p536n5e"
+    },
+    {
+     "name": "porta-entrada-04",
+     "position": [
+      8.3863,
+      1.2504,
+      -11.6
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "porta-entrada-04"
+     },
+     "id": "i02lfcd"
+    },
+    {
+     "name": "chao",
+     "position": [
+      6.665,
+      0.135,
+      -13.225
+     ],
+     "rotation": [
+      0,
+      0,
+      0,
+      1
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "madeira-clara"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "chao"
+     },
+     "id": "9q054li"
+    },
+    {
+     "name": "porta-banheiro-03",
+     "position": [
+      7.34,
+      2.36,
+      -11.065
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "porta-banheiro-03"
+     },
+     "id": "dk2vs1g"
+    },
+    {
+     "name": "parede01",
+     "position": [
+      5.015,
+      1.56,
+      -13.15
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "parede01"
+     },
+     "id": "ipfouok"
+    },
+    {
+     "name": "pes-cama",
+     "position": [
+      6.0603,
+      0.2498,
+      -13.7059
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "metalico"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "pes-cama"
+     },
+     "id": "g8kyhgp"
+    },
+    {
+     "name": "porta-entrada-03",
+     "position": [
+      8.3271,
+      1.2383,
+      -11.6
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "porta-entrada-03"
+     },
+     "id": "jkt3goq"
+    },
+    {
+     "name": "cabeceira-cama",
+     "position": [
+      5.1094,
+      1.0863,
+      -14.2622
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "couro"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "cabeceira-cama"
+     },
+     "id": "0qlwy94"
+    },
+    {
+     "name": "maçaneta-porta-entrada",
+     "position": [
+      8.2674,
+      1.0195,
+      -11.9407
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "aco",
+      "aco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "maçaneta-porta-entrada"
+     },
+     "id": "lvnky0t"
+    },
+    {
+     "name": "luminaria-base",
+     "position": [
+      6.6907,
+      0.8731,
+      -15.1835
+     ],
+     "rotation": [
+      -0.4994,
+      -0.5006,
+      -0.5006,
+      0.4994
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "metalico",
+      "metalico",
+      "metalico",
+      "metalico"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "luminaria-base"
+     },
+     "id": "qx394en"
+    }
+   ],
+   "id": "hfgox2g"
+  },
+  {
+   "name": "interacoes",
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "children": [
+    {
+     "name": "fios",
+     "position": [
+      7.633,
+      0.2171,
+      -13.745
+     ],
+     "rotation": [
+      -0.683,
+      -0.183,
+      -0.183,
+      0.683
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "aco"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "fio-ventilador"
+     },
+     "box": {
+      "size": [
+       0.0106,
+       0.0095,
+       0.0002
+      ],
+      "center": [
+       0.0011,
+       0.0011,
+       0
+      ]
+     },
+     "interactive": {
+      "kind": "risco",
+      "title": "",
+      "text": "",
+      "audio": "assets/audio/riscos-quarto-fios.mp3",
+      "action": null,
+      "hover": "risco"
+     },
+     "id": "6ixww24"
+    },
+    {
+     "name": "criado-mudo",
+     "position": [
+      6.6964,
+      0.5607,
+      -15.1659
+     ],
+     "rotation": [
+      -0.4994,
+      -0.5006,
+      -0.5006,
+      0.4994
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "laranja"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "criado -mudo"
+     },
+     "box": {
+      "size": [
+       0.0039,
+       0.0055,
+       0.0065
+      ],
+      "center": [
+       -0.0001,
+       -0.0001,
+       -0.0003
+      ]
+     },
+     "interactive": {
+      "kind": "risco",
+      "title": "",
+      "text": "",
+      "audio": "assets/audio/riscos-quarto-criado-mudo.mp3",
+      "action": null,
+      "hover": "risco"
+     },
+     "id": "xp1g843"
+    },
+    {
+     "name": "puxador-guarda-roupa",
+     "position": [
+      6.1734,
+      1.4229,
+      -11.6495
+     ],
+     "rotation": [
+      0.7071,
+      -0.7071,
+      0,
+      0
+     ],
+     "scale": [
+      3.175,
+      3.175,
+      3.175
+     ],
+     "materials": [
+      "metalico"
+     ],
+     "mesh": {
+      "model": "quarto-risco",
+      "name": "Sphere"
+     },
+     "box": {
+      "size": [
+       0.0268,
+       0.331,
+       0.0382
+      ],
+      "center": [
+       0,
+       0.1522,
+       0.0004
+      ]
+     },
+     "interactive": {
+      "kind": "risco",
+      "title": "",
+      "text": "",
+      "audio": "assets/audio/riscos-quarto-puxador.mp3",
+      "action": null,
+      "hover": "risco"
+     },
+     "id": "ad6hz5g"
+    },
+    {
+     "name": "sapato",
+     "position": [
+      6.633,
+      0.2726,
+      -12.585
+     ],
+     "rotation": [
+      -0.5213,
+      -0.4777,
+      -0.4777,
+      0.5213
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "mesh": {
+      "model": "sapato",
+      "name": "sapato"
+     },
+     "materials": [
+      "sapato"
+     ],
+     "box": {
+      "size": [
+       0.0042,
+       0.0034,
+       0.0015
+      ],
+      "center": [
+       0.0001,
+       -0.0009,
+       0.0001
+      ]
+     },
+     "interactive": {
+      "kind": "risco",
+      "title": "",
+      "text": "",
+      "audio": "assets/audio/riscos-quarto-sapatos.mp3",
+      "action": null,
+      "hover": "risco"
+     },
+     "id": "rrtbhtn"
+    }
+   ],
+   "id": "1w4bw2t"
+  },
+  {
+   "name": "luzes",
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "children": [
+    {
+     "name": "Directional Light",
+     "position": [
+      0,
+      7.54,
+      -18.35
+     ],
+     "rotation": [
+      0.4082,
+      0.2346,
+      -0.1094,
+      0.8754
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "light": {
+      "type": "directional",
+      "color": [
+       1,
+       0.9569,
+       0.8392
+      ],
+      "intensity": 1,
+      "range": 10,
+      "angle": 30
+     },
+     "id": "uap9deb"
+    },
+    {
+     "name": "Point Light",
+     "position": [
+      6.6907,
+      1.2369,
+      -15.1835
+     ],
+     "rotation": [
+      0,
+      0,
+      0,
+      1
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "light": {
+      "type": "point",
+      "color": [
+       1,
+       0.7844,
+       0.5142
+      ],
+      "intensity": 2,
+      "range": 1.4,
+      "angle": 30
+     },
+     "id": "jq2u20p"
+    },
+    {
+     "name": "Area Light",
+     "position": [
+      6.61,
+      2.888,
+      -13.19
+     ],
+     "rotation": [
+      0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "light": {
+      "type": "area",
+      "color": [
+       1,
+       1,
+       1
+      ],
+      "intensity": 1.2,
+      "range": 10,
+      "angle": 30
+     },
+     "id": "e61y8td"
+    }
+   ],
+   "id": "x8ey5r3"
+  },
+  {
+   "name": "icone-home",
+   "children": [
+    {
+     "name": "icone-home",
+     "position": [
+      7.9725,
+      0.9424,
+      -13.0103
+     ],
+     "rotation": [
+      -0.6879,
+      0.1637,
+      0.1637,
+      0.6879
+     ],
+     "scale": [
+      100,
+      100,
+      100
+     ],
+     "materials": [
+      "casinha"
+     ],
+     "mesh": {
+      "model": "icone-home",
+      "name": "Cube"
+     },
+     "box": {
+      "size": [
+       0.0004,
+       0.001,
+       0.0009
+      ],
+      "center": [
+       0,
+       0,
+       0.0001
+      ]
+     },
+     "interactive": {
+      "kind": "info",
+      "title": "",
+      "text": "",
+      "audio": null,
+      "action": "menu",
+      "hover": null
+     },
+     "id": "b0bdb6q"
+    }
+   ],
+   "position": [
+    0,
+    0,
+    0
+   ],
+   "rotation": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "id": "afz2lew"
+  }
+ ],
+ "id": "quarto-com-riscos-copia-a5411c",
+ "updatedAt": "2026-11-08T21:19:42.933Z",
+ "thumb": "ambientes/quarto-com-riscos-copia-a5411c/arquivos/miniatura.jpg"
+}

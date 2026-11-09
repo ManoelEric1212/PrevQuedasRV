@@ -1,0 +1,16 @@
+{
+  "name": "prevquedas-rv-web",
+  "version": "0.3.0",
+  "private": true,
+  "description": "PrevQuedasRV em A-Frame/WebXR - cenas exportadas do projeto Unity",
+  "scripts": {
+    "export": "node tools/export-unity.js ..",
+    "start": "node tools/server.js",
+    "phone": "adb reverse tcp:8080 tcp:8080 && node tools/server.js",
+    "vendor": "node tools/vendor-addons.js"
+  },
+  "devDependencies": {
+    "aframe": "1.7.1",
+    "fbx2gltf": "0.9.7-p1"
+  }
+}

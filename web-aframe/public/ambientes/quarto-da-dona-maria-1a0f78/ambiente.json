@@ -1,0 +1,607 @@
+{
+ "type": "model",
+ "name": "Quarto da Dona Maria",
+ "lighting": "room",
+ "background": "#9fb6bf",
+ "brightness": 1,
+ "room": {
+  "width": 4,
+  "depth": 3.6,
+  "height": 2.7,
+  "floorColor": "#c8b59a",
+  "wallColor": "#e8e4dc",
+  "floorTexture": "lajota-madeira-gimp",
+  "ceiling": true
+ },
+ "camera": {
+  "position": [
+   0,
+   1.6,
+   1.2000000000000002
+  ],
+  "yaw": 180
+ },
+ "intro": {
+  "text": "Este é o quarto da Dona Maria. Olhe em volta e encontre o que pode causar uma queda.",
+  "audio": null
+ },
+ "nodes": [
+  {
+   "name": "Cama completa",
+   "group": true,
+   "position": [
+    -0.75,
+    -0.0349,
+    -0.65
+   ],
+   "rotation": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "children": [
+    {
+     "name": "cama",
+     "position": [
+      0.2829,
+      0.673,
+      0.104
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      99.9981,
+      99.9981
+     ],
+     "materials": [
+      "tecido"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "cama"
+     },
+     "id": "sw10yy3"
+    },
+    {
+     "name": "cabeceira-cama",
+     "position": [
+      -0.6216,
+      1.0863,
+      -0.4489
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      99.9981,
+      99.9981
+     ],
+     "materials": [
+      "couro"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "cabeceira-cama"
+     },
+     "id": "27viwpw"
+    },
+    {
+     "name": "pes-cama",
+     "position": [
+      0.3293,
+      0.2498,
+      0.1074
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      99.9981,
+      99.9981
+     ],
+     "materials": [
+      "metalico"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "pes-cama"
+     },
+     "id": "un9u15x"
+    },
+    {
+     "name": "suporte-cama",
+     "position": [
+      0.3892,
+      0.4984,
+      0.1148
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      99.9981,
+      99.9981
+     ],
+     "materials": [
+      "moveis-cinza"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "suporte-cama"
+     },
+     "id": "j184tcu"
+    },
+    {
+     "name": "almofada",
+     "position": [
+      -0.38,
+      0.9251,
+      0.1226
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      99.9981,
+      99.9981
+     ],
+     "materials": [
+      "luminaria"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "almofada"
+     },
+     "id": "wroy798"
+    }
+   ],
+   "id": "rvczuv0"
+  },
+  {
+   "name": "criado-mudo",
+   "position": [
+    0.55,
+    0.3507,
+    -1.55
+   ],
+   "rotation": [
+    -0.7071,
+    0,
+    0,
+    0.7071
+   ],
+   "scale": [
+    100,
+    99.9981,
+    99.9981
+   ],
+   "materials": [
+    "laranja"
+   ],
+   "mesh": {
+    "model": "quarto",
+    "name": "criado -mudo"
+   },
+   "box": {
+    "size": [
+     0.0039,
+     0.0055,
+     0.0065
+    ],
+    "center": [
+     -0.0001,
+     -0.0001,
+     -0.0003
+    ]
+   },
+   "children": [
+    {
+     "name": "puxadores-criado-mudo",
+     "position": [
+      0.0018,
+      -0.0001,
+      0.0003
+     ],
+     "rotation": [
+      0,
+      0,
+      0,
+      1
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "materials": [
+      "aco",
+      "aco"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "puxadores-criado-mudo"
+     },
+     "id": "fgot6eb"
+    }
+   ],
+   "interactive": {
+    "kind": "prevencao",
+    "title": "",
+    "text": "",
+    "audio": "assets/audio/prev-quarto-mesa-cabeceira.mp3",
+    "action": null,
+    "hover": "prevencao"
+   },
+   "id": "dsfyiq5"
+  },
+  {
+   "name": "Luminária",
+   "position": [
+    0.55,
+    0.973,
+    -1.55
+   ],
+   "rotation": [
+    -0.7071,
+    0,
+    0,
+    0.7071
+   ],
+   "scale": [
+    100,
+    99.9981,
+    99.9981
+   ],
+   "materials": [
+    "luminaria"
+   ],
+   "mesh": {
+    "model": "quarto",
+    "name": "luminaria"
+   },
+   "box": {
+    "size": [
+     0.002,
+     0.002,
+     0.0016
+    ],
+    "center": [
+     0,
+     0,
+     0
+    ]
+   },
+   "children": [
+    {
+     "name": "luminaria-base",
+     "position": [
+      0,
+      0,
+      -0.0031
+     ],
+     "rotation": [
+      0,
+      0,
+      0,
+      1
+     ],
+     "scale": [
+      1,
+      1,
+      1
+     ],
+     "materials": [
+      "metalico",
+      "metalico",
+      "metalico",
+      "metalico"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "luminaria-base"
+     },
+     "id": "w5rpl6i"
+    }
+   ],
+   "interactive": {
+    "kind": "prevencao",
+    "title": "Luminária ao alcance",
+    "text": "Uma luminária perto da cama evita levantar no escuro.",
+    "audio": "assets/audio/prev-quarto-luminaria.mp3",
+    "action": null,
+    "hover": null
+   },
+   "id": "x68rdsg"
+  },
+  {
+   "name": "Guarda-roupa com puxador",
+   "group": true,
+   "position": [
+    1.55,
+    -0.21,
+    -0.6
+   ],
+   "rotation": [
+    0,
+    0,
+    0,
+    1
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "children": [
+    {
+     "name": "guarda-roupa",
+     "position": [
+      -0.1953,
+      1.2352,
+      0.0353
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      99.9981,
+      99.9981
+     ],
+     "materials": [
+      "moveis-branco",
+      "moveis-branco"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "guarda-roupa"
+     },
+     "id": "ucj2ih8"
+    },
+    {
+     "name": "puxador-guarda-roupa",
+     "position": [
+      0.1953,
+      1.16,
+      -0.0353
+     ],
+     "rotation": [
+      -0.7071,
+      0,
+      0,
+      0.7071
+     ],
+     "scale": [
+      100,
+      99.9981,
+      99.9981
+     ],
+     "materials": [
+      "metalico"
+     ],
+     "mesh": {
+      "model": "quarto",
+      "name": "puxador-guarda-roupa"
+     },
+     "box": {
+      "size": [
+       0.0098,
+       0.0008,
+       0.005
+      ],
+      "center": [
+       -0.0048,
+       0.0002,
+       0
+      ]
+     },
+     "interactive": {
+      "kind": "prevencao",
+      "title": "",
+      "text": "",
+      "audio": "assets/audio/prev-quarto-puxadores.mp3",
+      "action": null,
+      "hover": "prevencao"
+     },
+     "id": "4zs7lad"
+    }
+   ],
+   "id": "a0vi25i"
+  },
+  {
+   "name": "Tapete solto",
+   "position": [
+    0.2,
+    0.005,
+    0.55
+   ],
+   "rotation": [
+    -0.7071,
+    0,
+    0,
+    0.7071
+   ],
+   "scale": [
+    100,
+    99.9981,
+    99.9981
+   ],
+   "mesh": {
+    "model": "tapete",
+    "name": "tapete"
+   },
+   "materials": [
+    "tapete-anti"
+   ],
+   "box": {
+    "size": [
+     0.0075,
+     0.0043,
+     0.0001
+    ],
+    "center": [
+     0,
+     0,
+     0
+    ]
+   },
+   "interactive": {
+    "kind": "risco",
+    "title": "Tapete solto",
+    "text": "Tapetes soltos fazem tropeçar. Retire o tapete ou use um antiderrapante.",
+    "audio": "assets/audio/riscos-ban-tapete.mp3",
+    "action": null,
+    "hover": null
+   },
+   "id": "hbjautc"
+  },
+  {
+   "name": "Sapato no chão",
+   "position": [
+    -0.1,
+    0.0626,
+    0.15
+   ],
+   "rotation": [
+    -0.5213,
+    -0.4777,
+    -0.4777,
+    0.5214
+   ],
+   "scale": [
+    99.9911,
+    99.9902,
+    99.9902
+   ],
+   "mesh": {
+    "model": "sapato",
+    "name": "sapato"
+   },
+   "materials": [
+    "sapato"
+   ],
+   "box": {
+    "size": [
+     0.0042,
+     0.0034,
+     0.0015
+    ],
+    "center": [
+     0.0001,
+     -0.0009,
+     0.0001
+    ]
+   },
+   "interactive": {
+    "kind": "risco",
+    "title": "Sapatos no caminho",
+    "text": "Guarde os sapatos na sapateira: no chão eles viram obstáculo.",
+    "audio": "assets/audio/riscos-quarto-sapatos.mp3",
+    "action": null,
+    "hover": null
+   },
+   "id": "0e5bnke"
+  },
+  {
+   "name": "Fios soltos",
+   "position": [
+    0.95,
+    0.0072,
+    0.5
+   ],
+   "rotation": [
+    -0.683,
+    -0.183,
+    -0.183,
+    0.683
+   ],
+   "scale": [
+    99.9994,
+    99.9956,
+    99.9956
+   ],
+   "materials": [
+    "aco"
+   ],
+   "mesh": {
+    "model": "quarto-risco",
+    "name": "fio-ventilador"
+   },
+   "box": {
+    "size": [
+     0.0106,
+     0.0095,
+     0.0002
+    ],
+    "center": [
+     0.0011,
+     0.0011,
+     0
+    ]
+   },
+   "interactive": {
+    "kind": "risco",
+    "title": "Fios soltos",
+    "text": "Prenda os fios junto à parede com canaletas.",
+    "audio": "assets/audio/riscos-quarto-fios.mp3",
+    "action": null,
+    "hover": null
+   },
+   "id": "flwhsef"
+  },
+  {
+   "name": "Dica: caminho livre",
+   "position": [
+    -1.6,
+    1.4,
+    1
+   ],
+   "mesh": {
+    "primitive": "marker"
+   },
+   "interactive": {
+    "kind": "info",
+    "title": "Caminho livre",
+    "text": "Deixe livre e iluminado o caminho entre a cama e a porta do quarto.",
+    "audio": null,
+    "action": null,
+    "hover": null
+   },
+   "id": "ackb2oe"
+  }
+ ],
+ "published": true,
+ "id": "quarto-da-dona-maria-1a0f78",
+ "updatedAt": "2026-11-08T21:26:12.124Z",
+ "thumb": "ambientes/quarto-da-dona-maria-1a0f78/arquivos/miniatura.jpg"
+}

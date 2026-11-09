@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editor de ambientes — PrevQuedasRV</title>
+  <link rel="icon" href="assets/ui/logo.png">
+  <link rel="stylesheet" href="css/editor.css">
+  <script src="vendor/aframe.min.js"></script>
+  <script src="data/scenes.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/engine.js"></script>
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three-addons/three.js" } }
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#" id="go-home"><img src="assets/ui/logo.png" alt=""> <span>Editor de ambientes</span></a>
+    <div class="crumb" id="crumb" hidden>
+      <span class="sep">/</span>
+      <input id="env-name" class="name-input" aria-label="Nome do ambiente">
+      <span id="save-status" class="status"></span>
+    </div>
+    <div class="spacer"></div>
+    <div class="actions" id="ws-actions" hidden>
+      <button id="btn-undo" title="Desfazer (Ctrl+Z)">↶</button>
+      <button id="btn-redo" title="Refazer (Ctrl+Y)">↷</button>
+      <button id="btn-test" class="primary" title="Abrir o ambiente no app, em outra aba">▶ Testar no app</button>
+    </div>
+    <a class="link" href="index.html" target="_blank">Abrir o app ↗</a>
+  </header>
+
+  <!-- ============================== LISTA DE AMBIENTES -->
+  <main id="home" class="home">
+    <section>
+      <h2>Criar ambiente</h2>
+      <div class="new-grid">
+        <button class="new-card" id="new-room">
+          <span class="ico">▦</span><b>Cômodo 3D vazio</b><small>Defina as medidas e monte com móveis e objetos</small>
+        </button>
+        <button class="new-card" id="new-copy">
+          <span class="ico">⧉</span><b>Cópia de um cômodo original</b><small>Quarto ou banheiro do app, para alterar</small>
+        </button>
+        <button class="new-card" id="new-photo">
+          <span class="ico">◎</span><b>Foto 360°</b><small>Foto panorâmica de uma casa real, com pontos marcados</small>
+        </button>
+        <label class="new-card">
+          <span class="ico">⇪</span><b>Importar pacote</b><small>Arquivo .prevamb.json exportado de outro computador</small>
+          <input type="file" id="import-file" accept=".json,application/json" hidden>
+        </label>
+      </div>
+    </section>
+    <section>
+      <h2>Meus ambientes</h2>
+      <p class="muted" id="empty-msg" hidden>Nenhum ambiente ainda. Crie um acima.</p>
+      <div class="env-grid" id="env-grid"></div>
+    </section>
+  </main>
+
+  <!-- ============================== EDITOR -->
+  <main id="workspace" class="workspace" hidden>
+    <aside class="left panel">
+      <div class="panel-head">
+        <h3 id="left-title">Objetos</h3>
+        <button id="btn-add" class="primary small">+ Adicionar</button>
+      </div>
+      <div id="tree" class="tree"></div>
+      <p class="hint" id="left-hint"></p>
+    </aside>
+
+    <div class="viewport" id="viewport">
+      <a-scene embedded
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false"
+        keyboard-shortcuts="enterVR: false"
+        renderer="colorManagement: true; antialias: true"
+        loading-screen="enabled: false"
+        background="color: #9fb6bf">
+        <a-entity id="world"></a-entity>
+        <a-entity id="edcam" camera="active: true; fov: 60; near: 0.05; far: 500"></a-entity>
+      </a-scene>
+      <div class="vp-toolbar" id="vp-toolbar">
+        <div class="seg" id="tool-modes">
+          <button data-mode="translate" class="on" title="Mover (W)">✥ Mover</button>
+          <button data-mode="rotate" title="Girar (E)">⟳ Girar</button>
+          <button data-mode="scale" title="Tamanho (R)">⤢ Tamanho</button>
+        </div>
+        <button id="btn-floor" title="Apoiar o objeto no chão">⤓ No chão</button>
+        <button id="btn-focus" title="Centralizar no objeto (F)">◎ Focar</button>
+        <button id="btn-top" title="Ver o ambiente de cima">⬒ De cima</button>
+        <button id="btn-fp" title="Ver pelos olhos do visitante (arraste para olhar, Esc para sair)">👁 Visitante</button>
+        <button id="btn-clip" class="on" title="Cortar o teto para ver o cômodo por dentro (só no editor)" hidden>✂ Sem teto</button>
+      </div>
+      <div class="vp-toolbar" id="vp-toolbar-photo" hidden>
+        <button id="btn-place" class="primary" title="Clique na foto para colocar um ponto">+ Colocar ponto</button>
+        <span class="muted small-text">Arraste para olhar · roda do mouse aproxima · arraste um ponto para movê-lo</span>
+      </div>
+      <div class="vp-hint" id="vp-hint" hidden></div>
+    </div>
+
+    <aside class="right panel" id="props"></aside>
+  </main>
+
+  <!-- ============================== DIALOGOS -->
+  <dialog id="dlg-room" class="dlg">
+    <form method="dialog">
+      <h3>Novo cômodo 3D</h3>
+      <label>Nome <input name="name" value="Novo cômodo" required></label>
+      <div class="row3">
+        <label>Largura (m) <input name="w" type="number" step="0.1" min="1" max="30" value="4"></label>
+        <label>Profundidade (m) <input name="d" type="number" step="0.1" min="1" max="30" value="4"></label>
+        <label>Altura (m) <input name="h" type="number" step="0.1" min="2" max="6" value="2.7"></label>
+      </div>
+      <menu><button value="cancel" formnovalidate>Cancelar</button><button value="ok" class="primary">Criar</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-copy" class="dlg">
+    <form method="dialog">
+      <h3>Copiar um cômodo original</h3>
+      <p class="muted">Os originais continuam no app. A cópia aparece em "Outros ambientes" quando publicada.</p>
+      <div class="copy-grid" id="copy-grid"></div>
+      <menu><button value="cancel">Cancelar</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-photo" class="dlg">
+    <form method="dialog">
+      <h3>Novo ambiente com foto 360°</h3>
+      <label>Nome <input name="name" value="Casa — sala" required></label>
+      <label>Foto panorâmica (equirretangular, proporção 2:1)
+        <input name="file" type="file" accept="image/jpeg,image/png,image/webp" required>
+      </label>
+      <p class="muted small-text">Tire com o modo "Panorama 360°/Photo Sphere" do celular, ou com uma câmera 360.</p>
+      <menu><button value="cancel" formnovalidate>Cancelar</button><button value="ok" class="primary">Criar</button></menu>
+    </form>
+  </dialog>
+
+  <dialog id="dlg-add" class="dlg wide">
+    <form method="dialog">
+      <h3>Adicionar ao ambiente</h3>
+      <div class="tabs" id="add-tabs">
+        <button type="button" data-tab="orig" class="on">Objetos dos cômodos</button>
+        <button type="button" data-tab="shapes">Formas e marcadores</button>
+        <button type="button" data-tab="import">Modelos 3D (.glb)</button>
+      </div>
+      <div class="tab" data-tab="orig">
+        <input type="search" id="lib-search" placeholder="Buscar (cama, tapete, sapato…)">
+        <div class="lib-grid" id="lib-orig"></div>
+      </div>
+      <div class="tab" data-tab="shapes" hidden>
+        <div class="lib-grid" id="lib-shapes"></div>
+      </div>
+      <div class="tab" data-tab="import" hidden>
+        <p class="muted">Modelos .glb (glTF binário), em metros. Sites gratuitos: Poly Haven, Kenney, Sketchfab (verifique a licença).</p>
+        <label class="btn-like">Enviar arquivo .glb <input type="file" id="glb-file" accept=".glb,model/gltf-binary" hidden></label>
+        <div class="lib-grid" id="lib-import"></div>
+      </div>
+      <menu><button value="cancel">Fechar</button></menu>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="js/editor.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+html, body { margin: 0; height: 100%; background: #000; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+.overlay {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; align-items: center; justify-content: center;
+  background: #009293; color: #fff; padding: 16px; box-sizing: border-box;
+}
+.overlay[hidden] { display: none; }
+.intro-card { max-width: 420px; text-align: center; }
+.intro-card .logo { width: 96px; height: auto; }
+.intro-card h1 { margin: 8px 0 4px; font-size: 32px; }
+.intro-card p { margin: 0 0 20px; opacity: .9; line-height: 1.4; }
+.intro-card .hint { font-size: 14px; margin-top: 16px; opacity: .8; }
+.intro-card button {
+  display: block; width: 100%; margin: 10px 0; padding: 16px; font-size: 18px;
+  border-radius: 12px; border: 0; cursor: pointer; font-weight: 600;
+}
+.intro-card .primary { background: #fff; color: #00686a; }
+.intro-card .secondary { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,.8); }
+
+.loading {
+  position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 9000;
+  background: rgba(0,0,0,.6); color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 18px;
+}
+.loading[hidden] { display: none; }
+
+.corner {
+  position: fixed; top: 8px; left: 8px; z-index: 9500; width: 40px; height: 40px;
+  border-radius: 20px; border: 0; background: rgba(0,0,0,.35); color: #fff; font-size: 20px; opacity: .6;
+}
+.corner[hidden] { display: none; }
+
+/* Linha divisoria no centro, ajuda a encaixar o celular no Cardboard */
+#cardboard-divider {
+  position: fixed; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px;
+  background: rgba(255,255,255,.35); z-index: 9400; pointer-events: none;
+}
+#cardboard-divider[hidden] { display: none; }
+
+/* esconde o botao padrao de VR/tela cheia do A-Frame (usamos o modo Cardboard proprio) */
+.a-enter-vr, .a-enter-ar { display: none !important; }
