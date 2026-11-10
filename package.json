@@ -1,0 +1,14 @@
+{
+  "name": "prevquedas-rv-web",
+  "version": "0.4.0",
+  "private": true,
+  "description": "PrevQuedasRV em A-Frame/WebXR - realidade virtual para prevencao de quedas em casa",
+  "scripts": {
+    "start": "node tools/server.js",
+    "phone": "adb reverse tcp:8080 tcp:8080 && node tools/server.js",
+    "vendor": "node tools/vendor-addons.js"
+  },
+  "devDependencies": {
+    "aframe": "1.7.1"
+  }
+}
