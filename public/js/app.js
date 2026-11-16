@@ -331,6 +331,46 @@
     else goTo(params.has('cena') ? parseInt(params.get('cena'), 10) : 0);
   }
 
+  // ------------------------------------------------------------------ WebXR (Meta Quest e outros oculos)
+  // No VR o proprio oculos informa a altura real da cabeca (referencia "local-floor").
+  // Como o rig ja fica na altura dos olhos (E.EYE), descemos o #recenter para o chao,
+  // senao as alturas somam e a pessoa fica "flutuando" ~3 m acima do piso.
+  var xrHeightTimer = null;
+  function fixXrHeight() {
+    var tries = 0;
+    clearInterval(xrHeightTimer);
+    xrHeightTimer = setInterval(function () {
+      if (!sceneEl.is('vr-mode')) { clearInterval(xrHeightTimer); return; }
+      var y = cameraEl.object3D.position.y; // altura da cabeca informada pelo oculos
+      if (y > 0.5) recenter.object3D.position.y = -E.EYE;   // local-floor: compensa
+      else if (++tries < 20) return;                         // aguarda a primeira pose
+      else recenter.object3D.position.y = 0;                 // sem chao (referencia "local")
+      clearInterval(xrHeightTimer);
+      recenterView();
+    }, 100);
+  }
+  sceneEl.addEventListener('enter-vr', function () {
+    if (!sceneEl.is('vr-mode')) return;
+    setStereo(false);
+    document.getElementById('btn-toggle-stereo').hidden = true;
+    fixXrHeight();
+  });
+  sceneEl.addEventListener('exit-vr', function () {
+    clearInterval(xrHeightTimer);
+    recenter.object3D.position.y = 0;
+    document.getElementById('btn-toggle-stereo').hidden = document.getElementById('intro').hidden === false;
+  });
+  if (navigator.xr && navigator.xr.isSessionSupported) {
+    navigator.xr.isSessionSupported('immersive-vr').then(function (ok) {
+      if (ok) document.getElementById('btn-xr').hidden = false;
+    }).catch(function () {});
+  }
+
+  document.getElementById('btn-xr').addEventListener('click', function () {
+    var p = sceneEl.enterVR(); // precisa ser chamado direto no gesto do usuario
+    if (p && p.catch) p.catch(function (e) { console.warn('nao foi possivel entrar em VR', e); });
+    start('xr');
+  });
   document.getElementById('btn-cardboard').addEventListener('click', function () { start('cardboard'); });
   document.getElementById('btn-magic').addEventListener('click', function () { start('magic'); });
   document.getElementById('btn-toggle-stereo').addEventListener('click', function (e) {

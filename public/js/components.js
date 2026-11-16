@@ -235,7 +235,9 @@ AFRAME.registerComponent('look-down-menu', {
     // fica abaixo e a frente, na direcao em que a pessoa esta virada
     var yaw = e.y;
     var o = this.button.object3D;
-    o.position.set(-Math.sin(yaw) * 0.22, -0.9, -Math.cos(yaw) * 0.22); // ~76 graus abaixo do horizonte
-    o.lookAt(this.el.object3D.localToWorld(new THREE.Vector3(0, 0, 0)));
+    // (no modo VR a camera tem posicao propria dentro do #recenter: a altura real da cabeca)
+    var c = cam.object3D.position;
+    o.position.set(c.x - Math.sin(yaw) * 0.22, c.y - 0.9, c.z - Math.cos(yaw) * 0.22); // ~76 graus abaixo do horizonte
+    o.lookAt(this.el.object3D.localToWorld(c.clone()));
   }
 });

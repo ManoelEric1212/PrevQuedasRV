@@ -20,6 +20,7 @@
       <img src="assets/ui/logo.png" alt="" class="logo">
       <h1>Prev'quedasRV</h1>
       <p>Realidade virtual para prevenção de quedas em casa</p>
+      <button id="btn-xr" class="primary" hidden>Entrar em VR (Meta Quest)</button>
       <button id="btn-cardboard" class="primary">Usar com óculos (Cardboard)</button>
       <button id="btn-magic" class="secondary">Ver sem óculos</button>
       <p class="hint">Olhe para um objeto por 2 segundos, ou toque na tela, para selecionar.</p>
@@ -53,6 +54,9 @@
             fuse-ring>
           </a-entity>
         </a-entity>
+        <!-- Controles do Meta Quest (so aparecem no modo VR): o gatilho seleciona -->
+        <a-entity id="hand-right" laser-controls="hand: right" raycaster="objects: .clickable; far: 30"></a-entity>
+        <a-entity id="hand-left" laser-controls="hand: left" raycaster="objects: .clickable; far: 30"></a-entity>
       </a-entity>
     </a-entity>
   </a-scene>
