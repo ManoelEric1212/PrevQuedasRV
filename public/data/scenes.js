@@ -1312,9 +1312,9 @@ window.PREV_DATA = {
         {
          "name": "sapato-01",
          "position": [
-          6.5919,
-          0.5669,
-          -15.1936
+          6.6011,
+          0.545,
+          -15.188
          ],
          "rotation": [
           -0.7071,
@@ -1323,9 +1323,9 @@ window.PREV_DATA = {
           0.7071
          ],
          "scale": [
-          100,
-          100,
-          100
+          65,
+          65,
+          65
          ],
          "mesh": {
           "model": "sapateira",
@@ -1338,9 +1338,9 @@ window.PREV_DATA = {
         {
          "name": "sapato-02",
          "position": [
-          6.9875,
-          0.5669,
-          -15.1974
+          6.9901,
+          0.545,
+          -15.194
          ],
          "rotation": [
           -0.7071,
@@ -1349,9 +1349,9 @@ window.PREV_DATA = {
           0.7071
          ],
          "scale": [
-          100,
-          100,
-          100
+          65,
+          65,
+          65
          ],
          "mesh": {
           "model": "sapateira",
@@ -1364,9 +1364,9 @@ window.PREV_DATA = {
         {
          "name": "sapato-03",
          "position": [
-          6.588,
-          0.3612,
-          -15.1879
+          6.5906,
+          0.3393,
+          -15.1845
          ],
          "rotation": [
           -0.7071,
@@ -1375,9 +1375,9 @@ window.PREV_DATA = {
           0.7071
          ],
          "scale": [
-          100,
-          100,
-          100
+          65,
+          65,
+          65
          ],
          "mesh": {
           "model": "sapateira",
@@ -1390,9 +1390,9 @@ window.PREV_DATA = {
         {
          "name": "sapato-04",
          "position": [
-          6.9599,
-          0.3729,
-          -15.2121
+          6.9797,
+          0.3469,
+          -15.2015
          ],
          "rotation": [
           -0.7071,
@@ -1401,9 +1401,9 @@ window.PREV_DATA = {
           0.7071
          ],
          "scale": [
-          100,
-          100,
-          100
+          65,
+          65,
+          65
          ],
          "mesh": {
           "model": "sapateira",
@@ -2817,9 +2817,9 @@ window.PREV_DATA = {
       {
        "name": "sapato",
        "position": [
-        6.633,
-        0.2726,
-        -12.585
+        6.6016,
+        0.2498,
+        -12.5795
        ],
        "rotation": [
         -0.5213,
@@ -2828,9 +2828,9 @@ window.PREV_DATA = {
         0.5213
        ],
        "scale": [
-        100,
-        100,
-        100
+        65,
+        65,
+        65
        ],
        "mesh": {
         "model": "sapato",
