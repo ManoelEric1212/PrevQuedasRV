@@ -92,6 +92,7 @@
 
   function buildEnv(env) {
     var token = loadToken;
+    anchorHead = env.type === 'photo'; // foto 360: o centro da foto acompanha a cabeca
     return E.build(env, { world: world, rig: rig.object3D, onActivate: onActivate }).then(function () {
       if (token !== loadToken) return;
       sceneEl.setAttribute('background', 'color', env.background || '#9fb6bf');
@@ -111,7 +112,7 @@
     sceneEl.setAttribute('background', 'color', '#9fb6bf');
     var p = document.createElement('a-entity');
     // No Unity o canvas fica em z=+5 e a camera olha para +Z; aqui o rig tambem olha para +Z
-    p.setAttribute('position', '0 1.6 5');
+    p.setAttribute('position', '0 ' + E.EYE + ' 5'); // na altura dos olhos
     p.setAttribute('rotation', '0 180 0');
     world.appendChild(p);
     var amb = document.createElement('a-entity');
@@ -272,6 +273,7 @@
     E.clearWorld(world);
     current = r;
     var isRoom = r.indexOf('unity:') === 0 || r.indexOf('amb:') === 0;
+    anchorHead = !isRoom; // telas de interface ficam na altura da cabeca (buildEnv ajusta para foto 360)
     loadingEl.textContent = 'Carregando…';
     loadingEl.hidden = !isRoom;
     recenter.setAttribute('look-down-menu', 'enabled', isRoom);
@@ -285,6 +287,7 @@
     Promise.resolve(build()).then(function () {
       if (token !== loadToken) return;
       loadingEl.hidden = true;
+      applyXrHeight();
       recenterView();
       if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify({ type: 'scene', route: r }));
     }).catch(function (e) {
@@ -338,20 +341,31 @@
   }
 
   // ------------------------------------------------------------------ WebXR (Meta Quest e outros oculos)
-  // No VR o proprio oculos informa a altura real da cabeca (referencia "local-floor").
-  // Como o rig ja fica na altura dos olhos (E.EYE), descemos o #recenter para o chao,
-  // senao as alturas somam e a pessoa fica "flutuando" ~3 m acima do piso.
+  // No VR o proprio oculos informa a altura real da cabeca (referencia "local-floor"), que
+  // se soma a altura do rig (E.EYE). Para nao somar, o #recenter desce conforme a cena:
+  //  - comodo 3D: desce E.EYE -> o piso virtual fica no piso real e vale a altura real da pessoa
+  //  - foto 360 e telas: desce a altura da cabeca -> os olhos ficam no centro da foto / das telas
+  // Com referencia "local" (sem piso) a cabeca ja comeca perto de y = 0.
+  var xrFloor = null;     // true: local-floor, false: local, null: fora do VR ou aguardando
+  var anchorHead = true;  // true: conteudo na altura da cabeca (foto 360, telas)
+  function applyXrHeight() {
+    if (!sceneEl.is('vr-mode') || xrFloor === null) return;
+    var y = cameraEl.object3D.position.y; // altura da cabeca informada pelo oculos
+    recenter.object3D.position.y = anchorHead ? -y : (xrFloor ? -E.EYE : 0);
+  }
   var xrHeightTimer = null;
   function fixXrHeight() {
     var tries = 0;
+    xrFloor = null;
     clearInterval(xrHeightTimer);
     xrHeightTimer = setInterval(function () {
       if (!sceneEl.is('vr-mode')) { clearInterval(xrHeightTimer); return; }
-      var y = cameraEl.object3D.position.y; // altura da cabeca informada pelo oculos
-      if (y > 0.5) recenter.object3D.position.y = -E.EYE;   // local-floor: compensa
-      else if (++tries < 20) return;                         // aguarda a primeira pose
-      else recenter.object3D.position.y = 0;                 // sem chao (referencia "local")
+      var y = cameraEl.object3D.position.y;
+      if (y > 0.5) xrFloor = true;               // local-floor
+      else if (++tries < 20) return;             // aguarda a primeira pose
+      else xrFloor = false;                      // sem chao (referencia "local")
       clearInterval(xrHeightTimer);
+      applyXrHeight();
       recenterView();
     }, 100);
   }
@@ -363,6 +377,7 @@
   });
   sceneEl.addEventListener('exit-vr', function () {
     clearInterval(xrHeightTimer);
+    xrFloor = null;
     recenter.object3D.position.y = 0;
     document.getElementById('btn-toggle-stereo').hidden = document.getElementById('intro').hidden === false;
   });
