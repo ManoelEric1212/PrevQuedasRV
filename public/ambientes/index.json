@@ -11,21 +11,21 @@
    "order": 0
   },
   {
+   "id": "casa-com-texturas-efe6bb",
+   "name": "Casa com Texturas",
+   "type": "model",
+   "published": true,
+   "thumb": "ambientes/casa-com-texturas-efe6bb/arquivos/miniatura.jpg",
+   "updatedAt": "2026-11-23T20:27:58.089Z",
+   "order": 0
+  },
+  {
    "id": "quarto-com-riscos-copia-a5411c",
    "name": "Quarto com riscos (cópia)",
    "type": "model",
    "published": false,
    "thumb": "ambientes/quarto-com-riscos-copia-a5411c/arquivos/miniatura.jpg",
    "updatedAt": "2026-11-08T21:19:42.933Z",
-   "order": 0
-  },
-  {
-   "id": "quarto-da-dona-maria-1a0f78",
-   "name": "Quarto da Dona Maria",
-   "type": "model",
-   "published": true,
-   "thumb": "ambientes/quarto-da-dona-maria-1a0f78/arquivos/miniatura.jpg",
-   "updatedAt": "2026-11-08T21:26:12.124Z",
    "order": 0
   }
  ]

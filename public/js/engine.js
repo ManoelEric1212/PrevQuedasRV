@@ -195,6 +195,38 @@
     }
     return gltfCache[url];
   }
+  /*
+   * Partes de um .glb importado. Cada parte e identificada pelo caminho de indices dos filhos a
+   * partir de gltf.scene (ex.: [0, 3]) - o mesmo para o mesmo arquivo. Nao usamos o indice do no
+   * do glTF porque o GLTFLoader mistura as associacoes quando objetos compartilham a malha
+   * (duplicatas ligadas do Blender, Alt+D).
+   */
+  function gltfPartObject(gltf, path) {
+    var o = gltf.scene;
+    for (var i = 0; i < path.length && o; i++) o = o.children[path[i]];
+    return o || null;
+  }
+  /*
+   * Separa um .glb importado em partes (uma por objeto do Blender), para cada uma poder ser
+   * selecionada e marcada no editor. Se a cena tiver um unico objeto "pai" sem malha, desce nele.
+   * Retorna [{ name, part, position, rotation, scale }] com a transformacao relativa a cena.
+   */
+  function gltfParts(gltf) {
+    gltf.scene.updateMatrixWorld(true);
+    var base = [], roots = gltf.scene.children;
+    while (roots.length === 1 && !roots[0].isMesh && roots[0].children.length) { base.push(0); roots = roots[0].children; }
+    var parts = [];
+    roots.forEach(function (o, i) {
+      var hasMesh = false;
+      o.traverse(function (c) { if (c.isMesh) hasMesh = true; });
+      if (!hasMesh) return; // luzes, cameras e vazios sem malha
+      var p = new THREE.Vector3(), q = new THREE.Quaternion(), s = new THREE.Vector3();
+      o.matrixWorld.decompose(p, q, s);
+      parts.push({ name: o.name || ('objeto ' + (i + 1)), part: base.concat(i),
+        position: p.toArray().map(round), rotation: q.toArray().map(round), scale: s.toArray().map(round) });
+    });
+    return parts;
+  }
   function unityModelUrl(name) { return 'assets/models/' + name + '.glb'; }
   function meshFrom(gltf, meshName) {
     var idx = gltf.parser.json.meshes.findIndex(function (m) { return m.name === meshName; });
@@ -231,6 +263,55 @@
     return s;
   }
 
+  /*
+   * Ponto de teleporte: chama a atencao para mostrar que ali ha uma acao.
+   *  - anel e miolo no chao, pulsando devagar;
+   *  - uma onda que sai do centro e some (efeito de "piscar");
+   *  - coluna de luz translucida (~1 m) que desaparece para cima: vista de longe e por cima dos moveis.
+   * A animacao roda no onBeforeRender (sem componente), entao funciona no app e no editor.
+   */
+  var TELEPORT_COLOR = 0x00a0a5, BEAM_HEIGHT = 1.0;
+  function makeTeleportMarker() {
+    var g = new THREE.Group();
+    var mat = function (opacity) { return new THREE.MeshBasicMaterial({ color: TELEPORT_COLOR, transparent: true, opacity: opacity, depthWrite: false, side: THREE.DoubleSide, toneMapped: false }); };
+    var flat = function (geo, opacity) {
+      var m = new THREE.Mesh(geo, mat(opacity));
+      m.rotation.x = -Math.PI / 2; m.position.y = 0.01; m.renderOrder = 2;
+      g.add(m); return m;
+    };
+    var ring = flat(new THREE.RingGeometry(0.26, 0.35, 48), 0.95);
+    var disc = flat(new THREE.CircleGeometry(0.2, 48), 0.45);
+    var wave = flat(new THREE.RingGeometry(0.31, 0.35, 48), 0.8);
+    var beam = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, BEAM_HEIGHT, 40, 1, true), new THREE.ShaderMaterial({
+      uniforms: { color: { value: new THREE.Color(TELEPORT_COLOR) }, opacity: { value: 0.35 } },
+      vertexShader: 'varying float vY; void main(){ vY = uv.y; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: [
+        'uniform vec3 color; uniform float opacity; varying float vY;',
+        'void main(){',
+        '  float a = pow(1.0 - vY, 1.5);', // forte embaixo, some em cima
+        '  gl_FragColor = vec4(color, opacity * a);',
+        '  #include <colorspace_fragment>',
+        '}'
+      ].join('\n'),
+      transparent: true, depthWrite: false, side: THREE.DoubleSide
+    }));
+    beam.position.y = BEAM_HEIGHT / 2; beam.renderOrder = 3;
+    g.add(beam);
+    ring.onBeforeRender = function () {
+      var t = performance.now() / 1000;
+      var k = 0.5 + 0.5 * Math.sin(t * 3);               // pulso (~2 s)
+      ring.scale.setScalar(1 + 0.1 * k);
+      ring.material.opacity = 0.65 + 0.35 * k;
+      disc.material.opacity = 0.3 + 0.25 * k;
+      beam.material.uniforms.opacity.value = 0.35 + 0.25 * k;
+      var p = (t % 1.6) / 1.6;                             // onda: cresce e some a cada 1,6 s
+      wave.scale.setScalar(1 + p * 1.3);
+      wave.material.opacity = 0.8 * (1 - p);
+    };
+    g.userData.isTeleport = true;
+    return g;
+  }
+
   function primitiveMesh(p) {
     var geo;
     switch (p.primitive) {
@@ -264,6 +345,7 @@
     ctx.entities[n.id] = el;
 
     var it = normInteractive(n.interactive);
+    el.prevInteractive = it; // o app usa ao chegar num ponto de teleporte (titulo/audio do destino)
     var meshReady = Promise.resolve(null);
 
     if (n.mesh && !n.hidden) {
@@ -272,6 +354,10 @@
         var marker = makeMarker(it ? it.kind : 'info', 0.25);
         el.setObject3D('mesh', marker);
         meshReady = Promise.resolve(marker);
+      } else if (mk.primitive === 'teleport') {
+        var tp = makeTeleportMarker();
+        el.setObject3D('mesh', tp);
+        meshReady = Promise.resolve(tp);
       } else if (mk.primitive) {
         var pm = primitiveMesh(mk);
         el.setObject3D('mesh', pm);
@@ -280,7 +366,12 @@
         var url = mk.file || unityModelUrl(mk.model);
         meshReady = loadGltf(url).then(function (gltf) {
           if (mk.file) {
-            var sc = gltf.scene.clone(true);
+            // mk.part: caminho da parte (objeto do Blender) quando o modelo foi separado ao
+            // importar; a transformacao vem do ambiente, entao a da parte e zerada
+            var src = mk.part ? gltfPartObject(gltf, mk.part) : gltf.scene;
+            if (!src) return null;
+            var sc = src.clone(true);
+            if (mk.part) { sc.position.set(0, 0, 0); sc.quaternion.identity(); sc.scale.set(1, 1, 1); }
             sc.traverse(function (o) { if (o.isMesh && o.material) { o.material = o.material.clone(); } });
             return sc;
           }
@@ -318,7 +409,8 @@
   }
 
   function addInteraction(n, el, it, subtreeReady, ctx) {
-    var isMarker = n.mesh && n.mesh.primitive === 'marker';
+    var isTeleport = n.mesh && n.mesh.primitive === 'teleport';
+    var isMarker = n.mesh && (n.mesh.primitive === 'marker' || isTeleport); // destaque = aumentar
     var makeHit = function (center, size) {
       var hit = document.createElement('a-entity');
       hit.setAttribute('position', center.join(' '));
@@ -335,7 +427,12 @@
       hit.setAttribute('interactive', { target: el, marker: isMarker });
       hit.addEventListener('click', function () { if (ctx.onActivate) ctx.onActivate(it, el, n); });
     };
-    if (isMarker) {
+    if (isTeleport) {
+      // so o circulo no chao (a coluna de luz e apenas visual): uma area alta "roubava" a mira
+      // ao olhar em volta e prendia a mira no ponto onde o visitante esta
+      makeHit([0, 0.15, 0], [0.7, 0.3, 0.7]);
+      el.lastChild.dataset.teleport = '1';
+    } else if (isMarker) {
       makeHit([0, 0, 0], [0.3, 0.3, 0.3]);
     } else if (n.box) {
       makeHit(n.box.center, n.box.size);
@@ -501,7 +598,7 @@
     if (env.type === 'photo') {
       buildPhoto(env, ctx);
     } else {
-      if (env.room) ctx.shell = buildRoomShell(env.room, opts.world);
+      if (env.room && !env.room.hidden) ctx.shell = buildRoomShell(env.room, opts.world);
       (env.nodes || []).forEach(function (n) { buildNode(n, opts.world, ctx); });
       // as luzes direcionais dependem das matrizes, que ficam prontas apos montar as entidades
       ctx.pending.push(new Promise(function (r) { setTimeout(r, 0); }).then(function () { addLights(env, ctx, rigPos); }));
@@ -623,7 +720,7 @@
     uid: uid, clone: clone, eachNode: eachNode, findNode: findNode, assignIds: assignIds,
     normInteractive: normInteractive, fromUnity: fromUnity, newRoomEnv: newRoomEnv, newPhotoEnv: newPhotoEnv,
     cameraQuaternion: cameraQuaternion, cameraYawDeg: cameraYawDeg, dirFromYawPitch: dirFromYawPitch, yawPitchFromDir: yawPitchFromDir,
-    build: build, clearWorld: clearWorld, material: material, loadGltf: loadGltf, makeMarker: makeMarker,
+    build: build, clearWorld: clearWorld, material: material, loadGltf: loadGltf, gltfParts: gltfParts, makeMarker: makeMarker,
     libraryFromOriginals: libraryFromOriginals, unityModelUrl: unityModelUrl
   };
 })();

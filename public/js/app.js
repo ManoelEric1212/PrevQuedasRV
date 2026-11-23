@@ -70,11 +70,96 @@
   });
   sceneEl.setAttribute('panel-watch', '');
 
-  function onActivate(it) {
+  function onActivate(it, el) {
+    if (it.action === 'teleport') return teleportTo(el, it);
+    if (it.action && it.action.indexOf('tp:') === 0) {
+      // leva ate outro ponto de teleporte (ex.: a porta da cozinha leva ao ponto "Cozinha",
+      // do outro lado da parede); ao chegar mostra o titulo/audio do ponto de destino
+      var dest = world.querySelector('[data-node-id="' + it.action.slice(3) + '"]');
+      if (dest) return teleportTo(dest, dest.prevInteractive || {});
+      return;
+    }
     if (it.action === 'menu') return goTo('menu');
     if (it.action && it.action.indexOf('amb:') === 0) return goTo(it.action);
     if (it.audio) play(it.audio);
     if (it.title || it.text) showPanel(it.title, it.text, it.kind);
+  }
+
+  // ------------------------------------------------------------------ teleporte
+  // Escurece a vista, leva o visitante ate o ponto (olhos na altura E.EYE acima do piso dali)
+  // e clareia de novo. A "cortina" e uma esfera preta presa a camera: funciona na tela, no
+  // Cardboard e no VR (onde sobreposicoes HTML nao aparecem).
+  var fade = new THREE.Mesh(new THREE.SphereGeometry(0.2, 16, 8),
+    new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0, side: THREE.BackSide, depthTest: false, depthWrite: false }));
+  fade.renderOrder = 10000; fade.visible = false; fade.frustumCulled = false;
+  cameraEl.object3D.add(fade);
+  var fadeAnim = null;
+  function fadeTo(opacity, ms) {
+    return new Promise(function (resolve) {
+      fadeAnim = { from: fade.material.opacity, to: opacity, t0: performance.now(), ms: ms, done: resolve };
+    });
+  }
+  AFRAME.registerComponent('teleport-fade', {
+    tick: function (t) {
+      if (!fadeAnim) return;
+      var k = Math.min(1, (performance.now() - fadeAnim.t0) / fadeAnim.ms);
+      fade.material.opacity = fadeAnim.from + (fadeAnim.to - fadeAnim.from) * k;
+      fade.visible = fade.material.opacity > 0.001;
+      if (k >= 1) { var done = fadeAnim.done; fadeAnim = null; done(); }
+    }
+  });
+  sceneEl.setAttribute('teleport-fade', '');
+
+  // O ponto onde o visitante esta (a menos de 0,6 m da cabeca, no plano) fica apagado e
+  // desativado: nao prende a mira e nao atrapalha a vista. Volta ao sair dali.
+  AFRAME.registerComponent('teleport-here', {
+    init: function () { this.last = 0; },
+    tick: function (t) {
+      if (t - this.last < 200) return;
+      this.last = t;
+      var head = new THREE.Vector3(), p = new THREE.Vector3(), changed = false;
+      cameraEl.object3D.getWorldPosition(head);
+      document.querySelectorAll('#world [data-teleport]').forEach(function (hit) {
+        var node = hit.parentNode;
+        if (!node || !node.object3D) return;
+        node.object3D.getWorldPosition(p);
+        var here = Math.hypot(p.x - head.x, p.z - head.z) < 0.6;
+        if (hit.classList.contains('clickable') === !here) return;
+        hit.classList.toggle('clickable', !here);
+        var mesh = node.getObject3D('mesh');
+        if (mesh) mesh.visible = !here;
+        changed = true;
+      });
+      if (changed) {
+        var cur = document.getElementById('cursor');
+        if (cur && cur.components.raycaster) cur.components.raycaster.refreshObjects();
+      }
+    }
+  });
+  sceneEl.setAttribute('teleport-here', '');
+
+  var teleporting = false;
+  function teleportTo(el, it) {
+    if (teleporting) return;
+    teleporting = true;
+    hidePanel();
+    var target = new THREE.Vector3();
+    el.object3D.getWorldPosition(target);
+    fadeTo(1, 180).then(function () {
+      var r = rig.object3D;
+      var head = new THREE.Vector3();
+      cameraEl.object3D.getWorldPosition(head);
+      // move no plano: quem esta no ponto e a cabeca (no VR ela pode estar fora do centro do rig)
+      r.position.x += target.x - head.x;
+      r.position.z += target.z - head.z;
+      var floor = E.floorBelow(world.object3D, new THREE.Vector3(target.x, target.y + 1.5, target.z));
+      r.position.y = (floor !== null ? floor : target.y) + E.EYE;
+      return fadeTo(0, 260);
+    }).then(function () {
+      teleporting = false;
+      if (it.audio) play(it.audio);
+      if (it.title || it.text) showPanel(it.title, it.text, it.kind);
+    });
   }
 
   // ------------------------------------------------------------------ ambientes
@@ -273,6 +358,7 @@
     E.clearWorld(world);
     current = r;
     var isRoom = r.indexOf('unity:') === 0 || r.indexOf('amb:') === 0;
+    fadeAnim = null; fade.material.opacity = 0; fade.visible = false; teleporting = false;
     anchorHead = !isRoom; // telas de interface ficam na altura da cabeca (buildEnv ajusta para foto 360)
     loadingEl.textContent = 'Carregando…';
     loadingEl.hidden = !isRoom;

@@ -207,7 +207,8 @@ Atalhos (ignorados enquanto se digita num campo):
   "group": true,                      // conjunto da biblioteca: clique seleciona o grupo
   "mesh": { "model": "quarto", "name": "luminaria" }      // malha de assets/models/<model>.glb
        |  { "file": "ambientes/<id>/arquivos/modelo-x.glb" }  // glb importado (cena inteira)
-       |  { "primitive": "box|cylinder|sphere|plane|marker", "color": "#hex" },
+       |  { "file": "...glb", "part": [0, 3] }            // uma parte do glb (caminho de filhos a partir de gltf.scene)
+       |  { "primitive": "box|cylinder|sphere|plane|marker|teleport", "color": "#hex" },  // teleport: circulo no chao
   "materials": ["madeira-clara"],     // ids de PREV_DATA.materials, um por primitiva
   "box": { "center": [..], "size": [..] },                // BoxCollider do Unity (área de seleção)
   "light": { "type": "point", "hex": "#fff3e0", "intensity": 1, "range": 5 },  // luz do editor
@@ -216,7 +217,8 @@ Atalhos (ignorados enquanto se digita num campo):
     "kind": "risco|prevencao|info",
     "title": "…", "text": "…",
     "audio": "assets/audio/x.mp3" | "ambientes/<id>/arquivos/audio-x.webm" | null,
-    "action": null | "menu" | "amb:<id>",
+    "action": null | "menu" | "amb:<id>" | "teleport" | "tp:<nodeId>",
+              // teleport: leva o visitante ate o objeto; tp:<id>: leva ate o ponto de teleporte <id> (app.js teleportTo)
     "hover": "prevencao"              // opcional: id de material de destaque (herdado do Unity)
   },
   "children": [ … ]
@@ -307,7 +309,10 @@ Como um nó vira entidade (`buildNode`):
 1. Cria uma `a-entity` com `data-node-id` e TRS (posição, rotação e escala).
 2. Monta a malha:
    - glTF do Unity: `meshFrom()` clona a malha e **zera a transformação**, porque o GLTFLoader aplica a TRS do nó glTF no objeto da malha;
-   - `.glb` importado: clona a cena inteira;
+   - `.glb` importado: clona a cena inteira ou, com `mesh.part`, só aquela parte (com a transformação zerada).
+     As partes vêm de `gltfParts()` no import do editor: um item por objeto de topo (descendo num pai único sem malha).
+     São identificadas pelo caminho de filhos, não pelo índice do nó glTF, porque o GLTFLoader mistura as
+     associações quando objetos compartilham a malha (duplicatas ligadas do Blender);
    - formas: geometria do three.
 3. Monta os filhos.
 4. Se houver interação, cria uma **caixa invisível de seleção** (`[data-hit-for]`, classe `.clickable`):

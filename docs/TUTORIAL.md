@@ -181,9 +181,11 @@ A janela tem três abas:
   ou "sapato". Itens "com áudio" já vêm com a narração original.
 - **Formas e marcadores**: caixa, tapete/placa, cilindro e esfera, para representar coisas simples
   (um degrau, uma banqueta, um objeto no chão). Aqui também ficam os **marcadores flutuantes** (! ✓ i),
-  uma **luz** extra e o **ícone de voltar ao menu**.
-- **Modelos 3D (.glb)**: envie um modelo 3D baixado da internet (sites como Poly Haven, Kenney ou Sketchfab;
-  confira a licença).
+  uma **luz** extra, o **ícone de voltar ao menu** e o **ponto de teleporte** (veja a seção 2.9).
+- **Modelos 3D (.glb)**: envie um modelo 3D seu (feito no Blender, por exemplo) ou baixado da internet
+  (sites como Poly Haven, Kenney ou Sketchfab; confira a licença). Com **Separar os objetos** marcado
+  (padrão), cada objeto do modelo vira um item da lista, e você pode marcar o tapete, o fio etc. um a um.
+  Veja a seção 2.8 para trazer uma casa inteira do Blender.
 
 ![Formas e marcadores](img/editor-formas.png)
 
@@ -245,7 +247,8 @@ Clique num espaço vazio (ou aperte **Esc**) para ver as configurações do ambi
 
 ![Configurações do ambiente](img/editor-ambiente.png)
 
-- **Cômodo**: medidas, tipo de piso, cores do piso e das paredes, teto.
+- **Cômodo**: medidas, tipo de piso, cores do piso e das paredes, teto. Desmarque **Mostrar piso, paredes
+  e teto gerados** quando o cômodo vier pronto num modelo .glb.
 - **Aparência**: brilho das luzes e a cor vista pelas janelas.
 - **Narração de abertura**: texto e/ou áudio que aparecem assim que o visitante entra.
   Use para dar a tarefa, como "Encontre os 3 riscos deste quarto".
@@ -259,6 +262,81 @@ Mais embaixo fica a **Publicação**:
 - **Exportar pacote** e **Excluir ambiente**.
 
 Por fim, clique em **▶ Testar no app** (no topo) para experimentar como o visitante.
+
+### 2.8 Trazendo uma casa do Blender
+
+Dá para exportar a casa inteira num único arquivo; o editor separa os objetos sozinho.
+
+**No Blender**, antes de exportar:
+
+- Trabalhe em **metros** (1 unidade = 1 m). Confira uma porta (~2,10 m) ou a altura de uma cama (~0,45 m).
+- Selecione tudo e aplique as transformações: **Ctrl+A → All Transforms**.
+- Cada coisa que será marcada (tapete, fio, degrau, cadeira...) deve ser um **objeto separado**, com um nome
+  claro ("Tapete sala", "Fio TV"). O nome aparece na lista do editor.
+- Use materiais simples (Principled BSDF com cor ou imagem) e texturas JPG de até 2048 px.
+- Para o celular, mantenha a casa leve: algumas centenas de milhares de faces no total e um arquivo de
+  preferência abaixo de 30 MB.
+
+**Exportando**: *File → Export → glTF 2.0*, com:
+
+- **Format**: glTF Binary (.glb)
+- **Transform → +Y Up**: ligado
+- **Mesh → Apply Modifiers**: ligado
+- **Compression**: **desligado** (o app não lê modelos comprimidos com Draco)
+
+**Cores ou texturas saindo brancas?** Modelos vindos do SketchUp costumam ter duas saídas de material
+(uma para EEVEE e outra para Cycles, com o shader *Diffuse BSDF*), e o exportador pega a errada. Numa **cópia** do `.blend`, rode o script `tools/blender-preparar-glb.py`
+(aba *Scripting* → *Open* → *Run Script*): ele troca pelos materiais certos, cria UV onde falta e reduz
+as texturas para até 1024 px. Depois exporte normalmente.
+
+**No editor**:
+
+1. Crie um **Cômodo 3D vazio** e, nas configurações do ambiente, desmarque **Mostrar piso, paredes e teto gerados**.
+2. Em **+ Adicionar → Modelos 3D (.glb)**, deixe **Separar os objetos** marcado e envie o arquivo.
+   A casa aparece como um grupo com o nome do arquivo; cada objeto do Blender é um item dentro dele.
+3. Selecione os objetos de risco ou de prevenção e marque-os (seção 2.5).
+4. Posicione o **boneco do visitante** no cômodo onde a visita começa (seção 2.6).
+
+Para o visitante andar pela casa, use pontos de teleporte (seção 2.9).
+
+**Casa grande demais para o celular? Um arquivo por cômodo.** O script `tools/blender-exportar-comodos.py`
+exporta um `.glb` por cômodo mesmo quando a casa não está separada no Blender: cada cômodo é uma área
+retangular (vista de cima) e um pavimento, e vão para o arquivo os objetos dessa área e as paredes em volta.
+Ele também simplifica objetos muito detalhados (enfeites com dezenas de milhares de triângulos).
+As áreas ficam na lista `COMODOS`, no início do script; com `--mapa` ele desenha a planta com as áreas para
+conferir. Depois, crie um ambiente por cômodo no editor e ligue-os pelas portas com
+**Ao selecionar → Ir para: (outro ambiente)**.
+
+### 2.9 Andando pela casa: pontos de teleporte
+
+Num ambiente grande (uma casa inteira), o visitante se desloca por **pontos de teleporte**: círculos
+no chão. Ele olha para um círculo por 1 segundo, a vista escurece rapidamente e ele aparece em cima dele.
+Isso é mais confortável que andar, e não dá enjoo.
+
+1. Em **+ Adicionar → Formas e marcadores**, escolha **Ponto de teleporte**.
+2. Leve o círculo até o lugar desejado (porta da cozinha, corredor, frente do banheiro...).
+   Ele se apoia sozinho no piso.
+3. Opcional: em **Marcação**, preencha um **Título** ("Cozinha") e um áudio. Eles aparecem quando o
+   visitante chega ao ponto.
+
+Dicas:
+- Coloque os pontos onde se enxergue o próximo, para a pessoa sempre saber para onde pode ir.
+- Deixe uns 2 a 4 metros entre eles e evite colocá-los colados a paredes ou móveis.
+- Qualquer objeto também pode levar o visitante até ele: na **Marcação**, em **Ao selecionar**, escolha
+  **Levar o visitante até aqui (teleporte)**.
+- O ponto onde o visitante está fica apagado; ele volta a aparecer quando a pessoa vai para outro.
+
+**Passando de um cômodo para outro (através das paredes)**
+
+As paredes escondem os pontos do cômodo ao lado. Para ligar os cômodos, use as **portas**:
+
+1. Coloque um ponto de teleporte **dentro** do cômodo de destino e dê a ele um **Título** (ex.: "Cozinha").
+2. Selecione a **porta** (ou a passagem) que leva até lá. No Blender, ela precisa ser um objeto separado.
+3. Em **Marcação**, escolha um tipo (Informação, por exemplo) e, em **Ao selecionar**, escolha
+   **Levar até o ponto: Cozinha**.
+
+Assim, ao olhar para a porta por 1 segundo, o visitante aparece direto no ponto "Cozinha", do outro lado
+da parede, e vê o título e ouve o áudio desse ponto.
 
 ---
 

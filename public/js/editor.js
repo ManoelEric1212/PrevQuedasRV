@@ -734,6 +734,12 @@ async function toggleRecord(btn, set) {
 }
 
 // ---------------------------------------------------------------- interacao (marcacao do objeto)
+// pontos de teleporte do ambiente (destinos para "Levar até o ponto"), exceto o proprio objeto
+function teleportPoints(holder) {
+  const out = [];
+  if (env.type === 'model') E.eachNode(env.nodes, (n) => { if (n !== holder && n.mesh && n.mesh.primitive === 'teleport') out.push(n); });
+  return out;
+}
 function interactionSection(holder, allowNone) {
   const it = holder.interactive ? E.normInteractive(holder.interactive) : null;
   if (holder.interactive && holder.interactive !== it) {
@@ -760,6 +766,8 @@ function interactionSection(holder, allowNone) {
   const sel = h('select', { onchange: () => mutate(() => { I.action = sel.value || null; }, { rebuild: false }) },
     h('option', { value: '' }, 'Mostrar o texto e tocar o áudio'),
     h('option', { value: 'menu' }, 'Voltar ao menu'),
+    h('option', { value: 'teleport' }, 'Levar o visitante até aqui (teleporte)'),
+    teleportPoints(holder).map((p) => h('option', { value: 'tp:' + p.id }, 'Levar até o ponto: ' + ((p.interactive && p.interactive.title) || p.name || 'Teleporte'))),
     envIndex.filter((a) => a.id !== envId).map((a) => h('option', { value: 'amb:' + a.id }, 'Ir para: ' + a.name)));
   sel.value = I.action || '';
   sec.append(field('Ao selecionar', sel));
@@ -813,7 +821,9 @@ function envProps(p) {
         field('Largura · Profundidade · Altura (m)', h('div', { class: 'xyz' }, num('width', 1, 30), num('depth', 1, 30), num('height', 2, 6))),
         field('Piso', tex),
         h('div', { class: 'xyz', style: 'grid-template-columns: 1fr 1fr' }, field('Cor do piso', color('floorColor')), field('Cor das paredes', color('wallColor'))),
-        h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: R.ceiling !== false, onchange: (e) => mutate(() => { R.ceiling = e.target.checked; }) }), 'Teto')));
+        h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: R.ceiling !== false, onchange: (e) => mutate(() => { R.ceiling = e.target.checked; }) }), 'Teto'),
+        h('label', { class: 'check' }, h('input', { type: 'checkbox', checked: !R.hidden, onchange: (e) => mutate(() => { R.hidden = !e.target.checked; }) }), 'Mostrar piso, paredes e teto gerados'),
+        h('p', { class: 'muted small-text' }, 'Desmarque ao usar um modelo .glb que já traz o cômodo ou a casa pronta.')));
     }
     const bg = h('input', { type: 'color', value: env.background || '#9fb6bf' });
     bg.addEventListener('change', () => mutate(() => { env.background = bg.value; }));
@@ -909,6 +919,7 @@ const SHAPES = [
   { sym: '!', name: 'Marcador de risco', sub: 'sinal flutuante', node: { name: 'Marcador de risco', position: [0, 1.2, 0], mesh: { primitive: 'marker' }, interactive: { kind: 'risco', title: '', text: '', audio: null, action: null } } },
   { sym: '✓', name: 'Marcador de prevenção', sub: 'sinal flutuante', node: { name: 'Marcador de prevenção', position: [0, 1.2, 0], mesh: { primitive: 'marker' }, interactive: { kind: 'prevencao', title: '', text: '', audio: null, action: null } } },
   { sym: 'i', name: 'Marcador de informação', sub: 'sinal flutuante', node: { name: 'Informação', position: [0, 1.2, 0], mesh: { primitive: 'marker' }, interactive: { kind: 'info', title: '', text: '', audio: null, action: null } } },
+  { sym: '◎', name: 'Ponto de teleporte', sub: 'o visitante vai até aqui', node: { name: 'Teleporte', position: [0, 0, 0], mesh: { primitive: 'teleport' }, interactive: { kind: 'info', title: '', text: '', audio: null, action: 'teleport' } } },
   { sym: '✺', name: 'Luz', sub: 'lâmpada extra', node: { name: 'Luz', position: [0, 2.3, 0], light: { type: 'point', hex: '#fff3e0', intensity: 1, range: 5 } } },
   { sym: '⌂', name: 'Ícone "voltar ao menu"', sub: 'como nos originais', node: { name: 'icone-home', position: [0, 0.9, 0], rotation: [-0.7071, 0, 0, 0.7071], scale: [100, 100, 100], materials: ['casinha'], mesh: { model: 'icone-home', name: 'Cube' }, interactive: { kind: 'info', title: '', text: '', audio: null, action: 'menu' } } }
 ];
@@ -946,8 +957,17 @@ $('#glb-file').addEventListener('change', async (e) => {
     const base = f.name.replace(/\.glb$/i, '').replace(/[^\w-]+/g, '-').slice(0, 40) || 'modelo';
     const res = await api.upload(envId, 'modelo-' + base + '-' + E.uid() + '.glb', f);
     $('#dlg-add').close();
-    await addNode({ name: base, position: [0, 0, 0], mesh: { file: res.path } });
-    toast('Modelo adicionado');
+    // cada objeto do Blender vira um item da lista (dentro de um grupo com o nome do arquivo),
+    // para poder marcar o tapete, o fio etc. como risco/prevencao separadamente
+    const parts = $('#glb-split').checked ? E.gltfParts(await E.loadGltf(res.path)) : [];
+    if (parts.length > 1) {
+      await addNode({ name: base, position: [0, 0, 0],
+        children: parts.map((pt) => ({ name: pt.name, position: pt.position, rotation: pt.rotation, scale: pt.scale, mesh: { file: res.path, part: pt.part } })) });
+      toast('Modelo adicionado: ' + parts.length + ' objetos');
+    } else {
+      await addNode({ name: base, position: [0, 0, 0], mesh: { file: res.path } });
+      toast('Modelo adicionado');
+    }
   } catch (err) { toast('Erro: ' + err.message, true); }
 });
 
