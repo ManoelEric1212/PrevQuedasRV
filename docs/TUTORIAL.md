@@ -54,7 +54,7 @@ No centro da tela existe uma **mira** (um pequeno círculo branco). Para selecio
 
 1. Vire a cabeça (ou o celular) até a mira ficar sobre o objeto.
 2. Mantenha a mira parada. Um **anel azul** vai se completando em volta dela.
-3. Em cerca de **2 segundos** o anel fecha e o objeto é selecionado.
+3. Em cerca de **1 segundo** o anel fecha e o objeto é selecionado.
 
 ![Mirando um objeto](img/app-mirando.png)
 

@@ -117,7 +117,7 @@ Elementos fixos da cena: `#world` (conteúdo, limpo a cada troca), `#rig > #rece
 
 - **`#rig`**: posição e orientação inicial do ambiente (o visitante olha para **+Z** do rig).
 - **`#recenter`**: depois de montar, gira o rig para que o "para frente" da cena fique onde a pessoa já está olhando (`recenterView()`). Também carrega o componente `look-down-menu`.
-- **`#cursor`**: mira com `fuse` de 1800 ms. O raio sai da câmera (`raycaster.origin` compensa a distância da mira) e atinge apenas `.clickable`.
+- **`#cursor`**: mira com `fuse` de 1000 ms; o objeto muda de cor assim que a mira o atinge (raycaster sem intervalo). O raio sai da câmera (`raycaster.origin` compensa a distância da mira) e atinge apenas `.clickable`.
 
 ### 4.2 Editor (`editor.html` + `editor.js`)
 
@@ -335,7 +335,8 @@ Casco do cômodo gerado (`buildRoomShell`):
   - A câmera do three olha para −Z. Por isso o editor soma π ao converter (`setLookFromEnvYaw`), e a miniatura multiplica por uma rotação de 180°.
 - **Pontos da foto 360°:**
   - `yaw`/`pitch` em graus, com `dir = (sin yaw·cos pitch, sin pitch, cos yaw·cos pitch)`;
-  - o ponto fica a `PHOTO_RADIUS = 4` m de `(0, EYE=1.6, 0)`.
+  - o ponto fica a `PHOTO_RADIUS = 1.7` m de `(0, EYE=1.6, 0)`; a esfera da foto tem raio `PHOTO_SKY_RADIUS = 2` m e centro nos olhos (perto, para a foto não parecer gigante no modo óculos).
+- **Altura dos olhos:** no app, depois de montar um cômodo 3D, o rig é colocado a `EYE = 1.6` m acima do piso que está embaixo dele (`snapEyeToFloor`, raio para baixo). A altura salva na câmera do ambiente é ignorada.
 - **Esfera da foto:** o `a-sky` usa escala `-1 1 1`. O pixel `(u, v)` da imagem aparece na direção `(cos 2πu·sin πv, cos πv, sin 2πu·sin πv)`.
   Isso só importa se você **gerar** panorâmicas por código, como foi feito para os prints da documentação.
 

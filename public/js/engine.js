@@ -36,8 +36,12 @@
     prevencao: { label: 'Prevenção', color: '#2e9e5b', symbol: '✓' },
     info: { label: 'Informação', color: '#2b7bd9', symbol: 'i' }
   };
-  var EYE = 1.6;
-  var PHOTO_RADIUS = 4;
+  var EYE = 1.6;           // altura dos olhos acima do piso (m)
+  // Foto 360: a esfera fica perto (como as paredes de um comodo pequeno). Com a esfera
+  // a 50 m, no modo oculos (estereo) as paredes pareciam estar no infinito e o comodo
+  // ficava gigante ("sensacao de mergulho"). Os pontos ficam um pouco antes da esfera.
+  var PHOTO_SKY_RADIUS = 2;
+  var PHOTO_RADIUS = 1.7;
 
   // ------------------------------------------------------------------ util
   function uid() { return Math.random().toString(36).slice(2, 9); }
@@ -442,7 +446,10 @@
   function buildPhoto(env, ctx) {
     var world = ctx.world;
     var sky = document.createElement('a-sky');
-    sky.setAttribute('radius', 50);
+    sky.setAttribute('radius', PHOTO_SKY_RADIUS);
+    sky.setAttribute('segments-width', 96);
+    sky.setAttribute('segments-height', 48);
+    sky.setAttribute('position', '0 ' + EYE + ' 0'); // centro da foto = olhos de quem olha
     sky.setAttribute('material', { shader: 'flat', side: 'back', npot: true });
     sky.setAttribute('src', env.photo);
     sky.dataset.photo = '1';
@@ -460,7 +467,8 @@
       var pos = dirFromYawPitch(h.yaw, h.pitch).multiplyScalar(PHOTO_RADIUS).add(new THREE.Vector3(0, EYE, 0));
       n.position = pos.toArray();
       var el = buildNode(n, world, ctx);
-      el.object3D.scale.setScalar(h.size || 1.6);
+      // tamanho na tela igual ao de antes (quando os pontos ficavam a 4 m)
+      el.object3D.scale.setScalar((h.size || 1.6) * PHOTO_RADIUS / 4);
       if (h.label) {
         var lb = document.createElement('a-entity');
         lb.setAttribute('canvas-text', { text: h.label, width: 1.2, height: 0.16, size: 0.62, color: '#ffffff', background: 'rgba(0,0,0,0.55)', radius: 0.4 });
@@ -491,7 +499,36 @@
       // as luzes direcionais dependem das matrizes, que ficam prontas apos montar as entidades
       ctx.pending.push(new Promise(function (r) { setTimeout(r, 0); }).then(function () { addLights(env, ctx, rigPos); }));
     }
-    return Promise.all(ctx.pending).then(function () { return ctx; });
+    return Promise.all(ctx.pending).then(function () {
+      if (opts.rig && env.type !== 'photo') snapEyeToFloor(opts.world.object3D, opts.rig);
+      return ctx;
+    });
+  }
+
+  /*
+   * Coloca os olhos a EYE metros acima do piso que esta embaixo do visitante.
+   * Nas cenas vindas do Unity a camera estava a 0,94 m do piso no banheiro e 1,39 m
+   * no quarto (o piso fica em y = 0,21): tudo parecia grande demais e dava tontura.
+   */
+  function floorBelow(root, origin) {
+    var meshes = [];
+    root.updateMatrixWorld(true);
+    root.traverse(function (o) {
+      if (!o.isMesh || o.userData.isHitBox || !o.material || o.material.visible === false) return;
+      meshes.push(o);
+    });
+    var ray = new THREE.Raycaster(origin, new THREE.Vector3(0, -1, 0), 0, 3);
+    var floor = null, n = new THREE.Vector3();
+    ray.intersectObjects(meshes, false).forEach(function (h) {
+      if (!h.face) return;
+      n.copy(h.face.normal).transformDirection(h.object.matrixWorld);
+      if (n.y > 0.7 && (floor === null || h.point.y < floor)) floor = h.point.y; // o mais baixo (tapete fica acima)
+    });
+    return floor;
+  }
+  function snapEyeToFloor(root, rig) {
+    var floor = floorBelow(root, rig.position.clone());
+    if (floor !== null) rig.position.y = floor + EYE;
   }
 
   function clearWorld(world) {
@@ -574,7 +611,8 @@
   }
 
   window.PrevEngine = {
-    DATA: DATA, ORIGINALS: ORIGINALS, KINDS: KINDS, EYE: EYE, PHOTO_RADIUS: PHOTO_RADIUS,
+    DATA: DATA, ORIGINALS: ORIGINALS, KINDS: KINDS, EYE: EYE, PHOTO_RADIUS: PHOTO_RADIUS, PHOTO_SKY_RADIUS: PHOTO_SKY_RADIUS,
+    floorBelow: floorBelow,
     uid: uid, clone: clone, eachNode: eachNode, findNode: findNode, assignIds: assignIds,
     normInteractive: normInteractive, fromUnity: fromUnity, newRoomEnv: newRoomEnv, newPhotoEnv: newPhotoEnv,
     cameraQuaternion: cameraQuaternion, cameraYawDeg: cameraYawDeg, dirFromYawPitch: dirFromYawPitch, yawPitchFromDir: yawPitchFromDir,

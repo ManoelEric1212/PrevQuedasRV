@@ -23,7 +23,7 @@
       <button id="btn-xr" class="primary" hidden>Entrar em VR (Meta Quest)</button>
       <button id="btn-cardboard" class="primary">Usar com óculos (Cardboard)</button>
       <button id="btn-magic" class="secondary">Ver sem óculos</button>
-      <p class="hint">Olhe para um objeto por 2 segundos, ou toque na tela, para selecionar.</p>
+      <p class="hint">Olhe para um objeto por 1 segundo, ou toque na tela, para selecionar.</p>
     </div>
   </div>
 
@@ -44,10 +44,10 @@
     <!-- Rig da camera: rig (posicao/rotacao da cena) > recentro (gira para a direcao inicial) > camera -->
     <a-entity id="rig">
       <a-entity id="recenter" look-down-menu>
-        <a-entity id="camera" camera="fov: 80; near: 0.05; far: 100" look-controls="pointerLockEnabled: false; magicWindowTrackingEnabled: true; touchEnabled: false" wasd-controls="enabled: false">
+        <a-entity id="camera" camera="fov: 65; near: 0.05; far: 100" look-controls="pointerLockEnabled: false; magicWindowTrackingEnabled: true; touchEnabled: false" wasd-controls="enabled: false">
           <a-entity id="cursor"
-            cursor="fuse: true; fuseTimeout: 1800; rayOrigin: entity"
-            raycaster="objects: .clickable; far: 30; interval: 60; origin: 0 0 1.2"
+            cursor="fuse: true; fuseTimeout: 1000; rayOrigin: entity"
+            raycaster="objects: .clickable; far: 30; interval: 0; origin: 0 0 1.2"
             position="0 0 -1.2"
             geometry="primitive: ring; radiusInner: 0.012; radiusOuter: 0.02"
             material="color: #ffffff; shader: flat; opacity: 0.9; transparent: true; depthTest: false"
