@@ -229,6 +229,9 @@ AFRAME.registerComponent('look-down-menu', {
     if (!cam) return;
     var e = new THREE.Euler().setFromQuaternion(cam.object3D.quaternion, 'YXZ');
     var pitch = THREE.MathUtils.radToDeg(e.x);
+    // desconta a inclinacao de conforto do modo Cardboard: o limite vale para a cabeca
+    var lc = cam.components['look-controls'];
+    if (lc && lc.pitchObject) pitch -= THREE.MathUtils.radToDeg(lc.pitchObject.rotation.x);
     var show = this.data.enabled && pitch < this.data.pitch;
     this.setShown(show);
     if (!show) return;

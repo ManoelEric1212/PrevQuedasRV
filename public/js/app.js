@@ -302,8 +302,14 @@
   }
 
   // ------------------------------------------------------------------ entrada
+  // Inclinacao de conforto no modo Cardboard: a vista fica alguns graus mais para baixo
+  // que a cabeca, para ver o chao (tapetes, fios) sem dobrar tanto o pescoco.
+  // ?inclinar=<graus> ajusta (0 desliga). A mira e o raio acompanham, pois e a propria camera.
+  var STEREO_TILT = params.has('inclinar') ? (parseFloat(params.get('inclinar')) || 0) : 15;
   function setStereo(on) {
     sceneEl.systems['stereo-mode'].setEnabled(on);
+    var lc = cameraEl.components['look-controls'];
+    if (lc) lc.pitchObject.rotation.x = on ? THREE.MathUtils.degToRad(-STEREO_TILT) : 0;
     document.getElementById('cardboard-divider').hidden = !on;
     var cur = document.getElementById('cursor');
     // a mira fica a uma distancia confortavel; o raio sempre sai da camera

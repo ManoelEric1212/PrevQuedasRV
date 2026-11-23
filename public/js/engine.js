@@ -36,7 +36,14 @@
     prevencao: { label: 'Prevenção', color: '#2e9e5b', symbol: '✓' },
     info: { label: 'Informação', color: '#2b7bd9', symbol: 'i' }
   };
-  var EYE = 1.6;           // altura dos olhos acima do piso (m)
+  // altura dos olhos acima do piso (m). Padrao 1,0 m: com 1,6 m era preciso dobrar
+  // muito o pescoco para ver o chao (tapetes, fios) no Cardboard.
+  // Ajustavel por URL para testes, ex.: ?altura=1.3 (aceita metros ou centimetros).
+  var EYE = (function () {
+    var v = parseFloat(new URLSearchParams(location.search).get('altura'));
+    if (v > 3) v /= 100;
+    return v >= 0.5 && v <= 2.2 ? v : 1.0;
+  })();
   // Foto 360: a esfera fica perto (como as paredes de um comodo pequeno). Com a esfera
   // a 50 m, no modo oculos (estereo) as paredes pareciam estar no infinito e o comodo
   // ficava gigante ("sensacao de mergulho"). Os pontos ficam um pouco antes da esfera.

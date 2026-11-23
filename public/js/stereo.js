@@ -9,9 +9,17 @@
  * que compensa a lente. Sem isso as imagens ficam afastadas demais e a pessoa
  * fica "vesga" tentando junta-las.
  *
+ * Geometria igual a do polyfill Cardboard do A-Frame 1.4.1 (cardboard-vr-display):
+ * o centro de cada lente fica na altura real da lente (35 mm da base do visor,
+ * menos a borda do celular), e nao no meio da tela.
+ *
  * Parametros padrao: Google Cardboard v2. Podem ser ajustados por URL, ex.:
+ *   ?visor=v1    perfil Cardboard 2014 (v1) ou 2015 (v2, padrao)
  *   ?lentes=60   distancia entre os centros das lentes em mm
+ *   ?base=35     distancia da base do visor ate o centro das lentes em mm
+ *   ?borda=4     borda do celular abaixo da tela em mm
  *   ?dpi=160     densidade da tela (px CSS por polegada; Android ~160, iPhone ~163)
+ *   ?centro=1    volta a centralizar as lentes na altura da tela (comportamento antigo)
  */
 /* global AFRAME, THREE */
 AFRAME.registerSystem('stereo-mode', {
@@ -20,6 +28,9 @@ AFRAME.registerSystem('stereo-mode', {
     eyeSeparation: { default: 0.064 },     // distancia entre as cameras (m)
     interLensDistance: { default: 0.064 }, // distancia entre os centros das lentes (m)
     screenLensDistance: { default: 0.039 },// tela -> lente (m)
+    baselineLensDistance: { default: 0.035 }, // base do visor -> centro das lentes (m)
+    bevel: { default: 0.004 },             // borda do celular abaixo da tela (m)
+    centerVertically: { default: false },  // true = lentes no meio da altura da tela
     k1: { default: 0.34 },                 // coeficientes de distorcao da lente
     k2: { default: 0.55 },
     maxFov: { default: 60 },               // meio-angulo maximo visivel pela lente (graus)
@@ -28,6 +39,13 @@ AFRAME.registerSystem('stereo-mode', {
 
   init: function () {
     var p = new URLSearchParams(location.search);
+    if (p.get('visor') === 'v1') { // Cardboard I/O 2014
+      Object.assign(this.data, { interLensDistance: 0.060, screenLensDistance: 0.042, k1: 0.441, k2: 0.156, maxFov: 40 });
+    }
+    var mm = function (k, fallback) { var v = parseFloat(p.get(k)); return (isNaN(v) ? fallback : v) / 1000; };
+    if (p.has('base')) this.data.baselineLensDistance = mm('base', 35);
+    if (p.has('borda')) this.data.bevel = mm('borda', 4);
+    if (p.get('centro') === '1') this.data.centerVertically = true;
     if (p.has('lentes')) this.data.interLensDistance = (parseFloat(p.get('lentes')) || 64) / 1000;
     if (p.has('dpi')) this.data.cssPxPerInch = parseFloat(p.get('dpi')) || 160;
 
@@ -107,7 +125,9 @@ AFRAME.registerSystem('stereo-mode', {
     // metros por pixel do drawing buffer
     var mpp = (0.0254 / d.cssPxPerInch) * cssW / W;
     var lensOff = (d.interLensDistance / 2) / mpp;
-    var cy = H / 2;
+    // altura do centro das lentes, medida a partir da base da tela (gl_FragCoord.y = 0 embaixo)
+    var cy = d.centerVertically ? H / 2
+      : THREE.MathUtils.clamp((d.baselineLensDistance - d.bevel) / mpp, 0, H);
     var cL = new THREE.Vector2(half - lensOff, cy);
     var cR = new THREE.Vector2(half + lensOff, cy);
 

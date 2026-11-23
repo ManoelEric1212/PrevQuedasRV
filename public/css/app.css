@@ -30,10 +30,15 @@ html, body { margin: 0; height: 100%; background: #000; font-family: system-ui, 
 }
 .corner[hidden] { display: none; }
 
-/* Linha divisoria no centro, ajuda a encaixar o celular no Cardboard */
+/* Linha divisoria no centro, igual a do Cardboard: branca, 4px, comecando acima
+   da area do botao de engrenagem (28px * 1.5) para encaixar o celular no visor */
 #cardboard-divider {
-  position: fixed; top: 0; bottom: 0; left: 50%; width: 2px; margin-left: -1px;
-  background: rgba(255,255,255,.35); z-index: 9400; pointer-events: none;
+  position: fixed; top: 0; bottom: 42px; left: 50%; width: 4px; margin-left: -2px;
+  background: #fff; z-index: 9400; pointer-events: none;
+}
+#cardboard-divider::after { /* marca de alinhamento na base, no lugar da engrenagem */
+  content: ""; position: absolute; left: 50%; bottom: -35px; width: 28px; height: 28px;
+  margin-left: -14px; border: 4px solid #fff; border-radius: 50%; box-sizing: border-box;
 }
 #cardboard-divider[hidden] { display: none; }
 
