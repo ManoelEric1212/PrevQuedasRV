@@ -605,8 +605,99 @@
     }
     return Promise.all(ctx.pending).then(function () {
       if (opts.rig && env.type !== 'photo') snapEyeToFloor(opts.world.object3D, opts.rig);
+      // no app (nao no editor), junta o que e estatico para o celular desenhar menos vezes por quadro
+      if (!ctx.editor && env.type !== 'photo' && !/[?&]juntar=0/.test(location.search)) ctx.merged = mergeStatic(opts.world.object3D);
       return ctx;
     });
+  }
+
+  /*
+   * Junta as malhas estaticas em blocos: uma por material e por regiao de MERGE_CELL x MERGE_CELL m.
+   * Uma casa do Blender vem com milhares de objetos, cada um com seu material, e o celular trava com
+   * milhares de "desenhos" por quadro. Juntando, viram algumas centenas. A regiao mantem o recorte do
+   * que esta fora da vista (frustum culling) funcionando.
+   * Ficam separados: objetos com interacao (destaque ao olhar, caixa de selecao), teleportes,
+   * transparentes, sprites e caixas de selecao. Desligue com ?juntar=0 para comparar.
+   */
+  var MERGE_CELL = 4;
+  function mergeStatic(root) {
+    root.updateMatrixWorld(true);
+    var inv = new THREE.Matrix4().copy(root.matrixWorld).invert();
+    var groups = {}, matByKey = {}, originals = [], keep = 0;
+    var tmpBox = new THREE.Box3(), center = new THREE.Vector3();
+    var dynamic = function (o) {
+      for (var p = o; p && p !== root; p = p.parent) {
+        if (p.el && p.el.prevInteractive) return true; // marcado (risco, prevencao, porta, teleporte...)
+        if (p.userData && (p.userData.isTeleport || p.userData.isHitBox)) return true;
+      }
+      return false;
+    };
+    var matKey = function (m) {
+      return [m.type, m.name, m.color ? m.color.getHexString() : '', m.map ? m.map.uuid : '', m.emissive ? m.emissive.getHexString() : '',
+        m.roughness, m.metalness, m.side, m.alphaTest, m.vertexColors, m.normalMap ? m.normalMap.uuid : ''].join('|');
+    };
+    root.traverse(function (o) {
+      if (!o.isMesh || o.isSkinnedMesh || o.isInstancedMesh || !o.visible || !o.geometry || !o.geometry.attributes.position) return;
+      var m = o.material;
+      if (!m || Array.isArray(m) || m.transparent || m.opacity < 1 || m.visible === false || dynamic(o)) { keep++; return; }
+      tmpBox.setFromObject(o).getCenter(center);
+      var mk = matKey(m);
+      var key = mk + '#' + Math.floor(center.x / MERGE_CELL) + ',' + Math.floor(center.z / MERGE_CELL);
+      matByKey[mk] = matByKey[mk] || m;
+      (groups[key] = groups[key] || { mat: matByKey[mk], items: [] }).items.push(o);
+      originals.push(o);
+    });
+    var made = 0, mtx = new THREE.Matrix4(), nm = new THREE.Matrix3();
+    Object.keys(groups).forEach(function (key) {
+      var g = groups[key];
+      if (g.items.length < 2) return; // sozinho nao ganha nada
+      var nVert = 0, nIdx = 0, hasUv = false;
+      g.items.forEach(function (o) {
+        var geo = o.geometry;
+        nVert += geo.attributes.position.count;
+        nIdx += geo.index ? geo.index.count : geo.attributes.position.count;
+        if (geo.attributes.uv) hasUv = true;
+      });
+      var pos = new Float32Array(nVert * 3), nor = new Float32Array(nVert * 3), uv = hasUv ? new Float32Array(nVert * 2) : null;
+      var idx = nVert > 65535 ? new Uint32Array(nIdx) : new Uint16Array(nIdx);
+      var v0 = 0, i0 = 0, p = new THREE.Vector3(), n = new THREE.Vector3();
+      g.items.forEach(function (o) {
+        var geo = o.geometry, P = geo.attributes.position, N = geo.attributes.normal, U = geo.attributes.uv;
+        mtx.multiplyMatrices(inv, o.matrixWorld);
+        nm.getNormalMatrix(mtx);
+        var flip = mtx.determinant() < 0; // espelhado: inverte a ordem dos triangulos
+        for (var i = 0; i < P.count; i++) {
+          p.fromBufferAttribute(P, i).applyMatrix4(mtx);
+          pos[(v0 + i) * 3] = p.x; pos[(v0 + i) * 3 + 1] = p.y; pos[(v0 + i) * 3 + 2] = p.z;
+          if (N) {
+            n.fromBufferAttribute(N, i).applyMatrix3(nm).normalize();
+            nor[(v0 + i) * 3] = n.x; nor[(v0 + i) * 3 + 1] = n.y; nor[(v0 + i) * 3 + 2] = n.z;
+          }
+          if (uv && U) { uv[(v0 + i) * 2] = U.getX(i); uv[(v0 + i) * 2 + 1] = U.getY(i); }
+        }
+        var count = geo.index ? geo.index.count : P.count;
+        for (var k = 0; k < count; k += 3) {
+          var a = geo.index ? geo.index.getX(k) : k, b = geo.index ? geo.index.getX(k + 1) : k + 1, c = geo.index ? geo.index.getX(k + 2) : k + 2;
+          idx[i0 + k] = v0 + a;
+          idx[i0 + k + 1] = v0 + (flip ? c : b);
+          idx[i0 + k + 2] = v0 + (flip ? b : c);
+        }
+        v0 += P.count; i0 += count;
+      });
+      var merged = new THREE.BufferGeometry();
+      merged.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      merged.setAttribute('normal', new THREE.BufferAttribute(nor, 3));
+      if (uv) merged.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+      merged.setIndex(new THREE.BufferAttribute(idx, 1));
+      merged.computeBoundingSphere(); merged.computeBoundingBox();
+      var mesh = new THREE.Mesh(merged, g.mat);
+      mesh.name = 'estatico';
+      mesh.userData.merged = true;
+      root.add(mesh);
+      g.items.forEach(function (o) { if (o.parent) o.parent.remove(o); });
+      made++;
+    });
+    return { blocks: made, kept: keep, from: originals.length };
   }
 
   /*
